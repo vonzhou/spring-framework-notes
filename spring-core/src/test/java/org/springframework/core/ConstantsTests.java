@@ -37,6 +37,7 @@ public class ConstantsTests {
 		assertEquals(A.class.getName(), c.getClassName());
 		assertEquals(9, c.getSize());
 
+		System.out.println(c.asNumber("DOG") + "-----------");
 		assertEquals(c.asNumber("DOG").intValue(), A.DOG);
 		assertEquals(c.asNumber("dog").intValue(), A.DOG);
 		assertEquals(c.asNumber("cat").intValue(), A.CAT);
