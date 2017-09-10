@@ -32,9 +32,9 @@ import org.springframework.lang.UsesJava7;
 import org.springframework.util.Assert;
 
 /**
- * {@link Resource} implementation for {@code java.nio.file.Path} handles.
- * Supports resolution as File, and also as URL.
- * Implements the extended {@link WritableResource} interface.
+ * {@link Resource} implementation for {@code java.nio.file.Path} handles. Supports
+ * resolution as File, and also as URL. Implements the extended {@link WritableResource}
+ * interface.
  *
  * @author Philippe Marschall
  * @author Juergen Hoeller
@@ -46,12 +46,13 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	private final Path path;
 
-
 	/**
 	 * Create a new PathResource from a Path handle.
-	 * <p>Note: Unlike {@link FileSystemResource}, when building relative resources
-	 * via {@link #createRelative}, the relative path will be built <i>underneath</i>
-	 * the given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * <p>
+	 * Note: Unlike {@link FileSystemResource}, when building relative resources via
+	 * {@link #createRelative}, the relative path will be built <i>underneath</i> the
+	 * given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * 
 	 * @param path a Path handle
 	 */
 	public PathResource(Path path) {
@@ -61,9 +62,11 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * Create a new PathResource from a Path handle.
-	 * <p>Note: Unlike {@link FileSystemResource}, when building relative resources
-	 * via {@link #createRelative}, the relative path will be built <i>underneath</i>
-	 * the given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * <p>
+	 * Note: Unlike {@link FileSystemResource}, when building relative resources via
+	 * {@link #createRelative}, the relative path will be built <i>underneath</i> the
+	 * given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * 
 	 * @param path a path
 	 * @see java.nio.file.Paths#get(String, String...)
 	 */
@@ -74,9 +77,11 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * Create a new PathResource from a Path handle.
-	 * <p>Note: Unlike {@link FileSystemResource}, when building relative resources
-	 * via {@link #createRelative}, the relative path will be built <i>underneath</i>
-	 * the given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * <p>
+	 * Note: Unlike {@link FileSystemResource}, when building relative resources via
+	 * {@link #createRelative}, the relative path will be built <i>underneath</i> the
+	 * given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * 
 	 * @see java.nio.file.Paths#get(URI)
 	 * @param uri a path URI
 	 */
@@ -84,7 +89,6 @@ public class PathResource extends AbstractResource implements WritableResource {
 		Assert.notNull(uri, "URI must not be null");
 		this.path = Paths.get(uri).normalize();
 	}
-
 
 	/**
 	 * Return the file path for this resource.
@@ -95,6 +99,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation returns whether the underlying file exists.
+	 * 
 	 * @see org.springframework.core.io.PathResource#exists()
 	 */
 	@Override
@@ -103,8 +108,9 @@ public class PathResource extends AbstractResource implements WritableResource {
 	}
 
 	/**
-	 * This implementation checks whether the underlying file is marked as readable
-	 * (and corresponds to an actual file with content, not to a directory).
+	 * This implementation checks whether the underlying file is marked as readable (and
+	 * corresponds to an actual file with content, not to a directory).
+	 * 
 	 * @see java.nio.file.Files#isReadable(Path)
 	 * @see java.nio.file.Files#isDirectory(Path, java.nio.file.LinkOption...)
 	 */
@@ -115,6 +121,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation opens a InputStream for the underlying file.
+	 * 
 	 * @see java.nio.file.spi.FileSystemProvider#newInputStream(Path, OpenOption...)
 	 */
 	@Override
@@ -129,8 +136,9 @@ public class PathResource extends AbstractResource implements WritableResource {
 	}
 
 	/**
-	 * This implementation checks whether the underlying file is marked as writable
-	 * (and corresponds to an actual file with content, not to a directory).
+	 * This implementation checks whether the underlying file is marked as writable (and
+	 * corresponds to an actual file with content, not to a directory).
+	 * 
 	 * @see java.nio.file.Files#isWritable(Path)
 	 * @see java.nio.file.Files#isDirectory(Path, java.nio.file.LinkOption...)
 	 */
@@ -141,6 +149,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation opens a OutputStream for the underlying file.
+	 * 
 	 * @see java.nio.file.spi.FileSystemProvider#newOutputStream(Path, OpenOption...)
 	 */
 	@Override
@@ -153,6 +162,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation returns a URL for the underlying file.
+	 * 
 	 * @see java.nio.file.Path#toUri()
 	 * @see java.net.URI#toURL()
 	 */
@@ -163,6 +173,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation returns a URI for the underlying file.
+	 * 
 	 * @see java.nio.file.Path#toUri()
 	 */
 	@Override
@@ -181,7 +192,8 @@ public class PathResource extends AbstractResource implements WritableResource {
 		catch (UnsupportedOperationException ex) {
 			// Only paths on the default file system can be converted to a File:
 			// Do exception translation for cases where conversion is not possible.
-			throw new FileNotFoundException(this.path + " cannot be resolved to absolute file path");
+			throw new FileNotFoundException(
+					this.path + " cannot be resolved to absolute file path");
 		}
 	}
 
@@ -195,6 +207,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation returns the underlying File's timestamp.
+	 * 
 	 * @see java.nio.file.Files#getLastModifiedTime(Path, java.nio.file.LinkOption...)
 	 */
 	@Override
@@ -205,8 +218,9 @@ public class PathResource extends AbstractResource implements WritableResource {
 	}
 
 	/**
-	 * This implementation creates a PathResource, applying the given path
-	 * relative to the path of the underlying file of this resource descriptor.
+	 * This implementation creates a PathResource, applying the given path relative to the
+	 * path of the underlying file of this resource descriptor.
+	 * 
 	 * @see java.nio.file.Path#resolve(String)
 	 */
 	@Override
@@ -216,6 +230,7 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * This implementation returns the name of the file.
+	 * 
 	 * @see java.nio.file.Path#getFileName()
 	 */
 	@Override
@@ -228,14 +243,13 @@ public class PathResource extends AbstractResource implements WritableResource {
 		return "path [" + this.path.toAbsolutePath() + "]";
 	}
 
-
 	/**
 	 * This implementation compares the underlying Path references.
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return (this == obj ||
-			(obj instanceof PathResource && this.path.equals(((PathResource) obj).path)));
+		return (this == obj || (obj instanceof PathResource
+				&& this.path.equals(((PathResource) obj).path)));
 	}
 
 	/**

@@ -28,11 +28,12 @@ import java.net.URLConnection;
 import org.springframework.util.ResourceUtils;
 
 /**
- * Abstract base class for resources which resolve URLs into File references,
- * such as {@link UrlResource} or {@link ClassPathResource}.
+ * Abstract base class for resources which resolve URLs into File references, such as
+ * {@link UrlResource} or {@link ClassPathResource}.
  *
- * <p>Detects the "file" protocol as well as the JBoss "vfs" protocol in URLs,
- * resolving file system references accordingly.
+ * <p>
+ * Detects the "file" protocol as well as the JBoss "vfs" protocol in URLs, resolving file
+ * system references accordingly.
  *
  * @author Juergen Hoeller
  * @since 3.0
@@ -42,6 +43,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	/**
 	 * This implementation returns a File reference for the underlying class path
 	 * resource, provided that it refers to a file in the file system.
+	 * 
 	 * @see org.springframework.util.ResourceUtils#getFile(java.net.URL, String)
 	 */
 	@Override
@@ -54,8 +56,8 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	}
 
 	/**
-	 * This implementation determines the underlying File
-	 * (or jar file, in case of a resource in a jar/zip).
+	 * This implementation determines the underlying File (or jar file, in case of a
+	 * resource in a jar/zip).
 	 */
 	@Override
 	protected File getFileForLastModifiedCheck() throws IOException {
@@ -73,8 +75,9 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	}
 
 	/**
-	 * This implementation returns a File reference for the given URI-identified
-	 * resource, provided that it refers to a file in the file system.
+	 * This implementation returns a File reference for the given URI-identified resource,
+	 * provided that it refers to a file in the file system.
+	 * 
 	 * @see org.springframework.util.ResourceUtils#getFile(java.net.URI, String)
 	 */
 	protected File getFile(URI uri) throws IOException {
@@ -83,7 +86,6 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 		}
 		return ResourceUtils.getFile(uri, getDescription());
 	}
-
 
 	@Override
 	public boolean exists() {
@@ -97,8 +99,9 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 				// Try a URL connection content-length header
 				URLConnection con = url.openConnection();
 				customizeConnection(con);
-				HttpURLConnection httpCon =
-						(con instanceof HttpURLConnection ? (HttpURLConnection) con : null);
+				HttpURLConnection httpCon = (con instanceof HttpURLConnection
+						? (HttpURLConnection) con
+						: null);
 				if (httpCon != null) {
 					int code = httpCon.getResponseCode();
 					if (code == HttpURLConnection.HTTP_OK) {
@@ -180,13 +183,14 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 		return con.getLastModified();
 	}
 
-
 	/**
 	 * Customize the given {@link URLConnection}, obtained in the course of an
 	 * {@link #exists()}, {@link #contentLength()} or {@link #lastModified()} call.
-	 * <p>Calls {@link ResourceUtils#useCachesIfNecessary(URLConnection)} and
-	 * delegates to {@link #customizeConnection(HttpURLConnection)} if possible.
-	 * Can be overridden in subclasses.
+	 * <p>
+	 * Calls {@link ResourceUtils#useCachesIfNecessary(URLConnection)} and delegates to
+	 * {@link #customizeConnection(HttpURLConnection)} if possible. Can be overridden in
+	 * subclasses.
+	 * 
 	 * @param con the URLConnection to customize
 	 * @throws IOException if thrown from URLConnection methods
 	 */
@@ -200,14 +204,15 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	/**
 	 * Customize the given {@link HttpURLConnection}, obtained in the course of an
 	 * {@link #exists()}, {@link #contentLength()} or {@link #lastModified()} call.
-	 * <p>Sets request method "HEAD" by default. Can be overridden in subclasses.
+	 * <p>
+	 * Sets request method "HEAD" by default. Can be overridden in subclasses.
+	 * 
 	 * @param con the HttpURLConnection to customize
 	 * @throws IOException if thrown from HttpURLConnection methods
 	 */
 	protected void customizeConnection(HttpURLConnection con) throws IOException {
 		con.setRequestMethod("HEAD");
 	}
-
 
 	/**
 	 * Inner delegate class, avoiding a hard JBoss VFS API dependency at runtime.

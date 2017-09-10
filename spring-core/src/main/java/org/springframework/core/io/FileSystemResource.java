@@ -29,9 +29,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link Resource} implementation for {@code java.io.File} handles.
- * Supports resolution as a {@code File} and also as a {@code URL}.
- * Implements the extended {@link WritableResource} interface.
+ * {@link Resource} implementation for {@code java.io.File} handles. Supports resolution
+ * as a {@code File} and also as a {@code URL}. Implements the extended
+ * {@link WritableResource} interface.
  *
  * @author Juergen Hoeller
  * @since 28.12.2003
@@ -43,16 +43,16 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	private final String path;
 
-
 	/**
 	 * Create a new {@code FileSystemResource} from a {@link File} handle.
-	 * <p>Note: When building relative resources via {@link #createRelative},
-	 * the relative path will apply <i>at the same directory level</i>:
-	 * e.g. new File("C:/dir1"), relative path "dir2" -> "C:/dir2"!
-	 * If you prefer to have relative paths built underneath the given root
-	 * directory, use the {@link #FileSystemResource(String) constructor with a file path}
-	 * to append a trailing slash to the root path: "C:/dir1/", which
-	 * indicates this directory as root for all relative paths.
+	 * <p>
+	 * Note: When building relative resources via {@link #createRelative}, the relative
+	 * path will apply <i>at the same directory level</i>: e.g. new File("C:/dir1"),
+	 * relative path "dir2" -> "C:/dir2"! If you prefer to have relative paths built
+	 * underneath the given root directory, use the {@link #FileSystemResource(String)
+	 * constructor with a file path} to append a trailing slash to the root path:
+	 * "C:/dir1/", which indicates this directory as root for all relative paths.
+	 * 
 	 * @param file a File handle
 	 */
 	public FileSystemResource(File file) {
@@ -63,12 +63,13 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * Create a new {@code FileSystemResource} from a file path.
-	 * <p>Note: When building relative resources via {@link #createRelative},
-	 * it makes a difference whether the specified resource base path here
-	 * ends with a slash or not. In the case of "C:/dir1/", relative paths
-	 * will be built underneath that root: e.g. relative path "dir2" ->
-	 * "C:/dir1/dir2". In the case of "C:/dir1", relative paths will apply
-	 * at the same directory level: relative path "dir2" -> "C:/dir2".
+	 * <p>
+	 * Note: When building relative resources via {@link #createRelative}, it makes a
+	 * difference whether the specified resource base path here ends with a slash or not.
+	 * In the case of "C:/dir1/", relative paths will be built underneath that root: e.g.
+	 * relative path "dir2" -> "C:/dir1/dir2". In the case of "C:/dir1", relative paths
+	 * will apply at the same directory level: relative path "dir2" -> "C:/dir2".
+	 * 
 	 * @param path a file path
 	 */
 	public FileSystemResource(String path) {
@@ -76,7 +77,6 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 		this.file = new File(path);
 		this.path = StringUtils.cleanPath(path);
 	}
-
 
 	/**
 	 * Return the file path for this resource.
@@ -87,6 +87,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * This implementation returns whether the underlying file exists.
+	 * 
 	 * @see java.io.File#exists()
 	 */
 	@Override
@@ -95,8 +96,9 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	}
 
 	/**
-	 * This implementation checks whether the underlying file is marked as readable
-	 * (and corresponds to an actual file with content, not to a directory).
+	 * This implementation checks whether the underlying file is marked as readable (and
+	 * corresponds to an actual file with content, not to a directory).
+	 * 
 	 * @see java.io.File#canRead()
 	 * @see java.io.File#isDirectory()
 	 */
@@ -107,6 +109,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * This implementation opens a FileInputStream for the underlying file.
+	 * 
 	 * @see java.io.FileInputStream
 	 */
 	@Override
@@ -115,8 +118,9 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	}
 
 	/**
-	 * This implementation checks whether the underlying file is marked as writable
-	 * (and corresponds to an actual file with content, not to a directory).
+	 * This implementation checks whether the underlying file is marked as writable (and
+	 * corresponds to an actual file with content, not to a directory).
+	 * 
 	 * @see java.io.File#canWrite()
 	 * @see java.io.File#isDirectory()
 	 */
@@ -127,6 +131,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * This implementation opens a FileOutputStream for the underlying file.
+	 * 
 	 * @see java.io.FileOutputStream
 	 */
 	@Override
@@ -136,6 +141,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * This implementation returns a URL for the underlying file.
+	 * 
 	 * @see java.io.File#toURI()
 	 */
 	@Override
@@ -145,6 +151,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * This implementation returns a URI for the underlying file.
+	 * 
 	 * @see java.io.File#toURI()
 	 */
 	@Override
@@ -161,7 +168,8 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	}
 
 	/**
-	 * This implementation returns the underlying File's length.
+	 * 覆盖了抽象类中的实现。
+	 *  This implementation returns the underlying File's length.
 	 */
 	@Override
 	public long contentLength() throws IOException {
@@ -169,8 +177,9 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	}
 
 	/**
-	 * This implementation creates a FileSystemResource, applying the given path
-	 * relative to the path of the underlying file of this resource descriptor.
+	 * This implementation creates a FileSystemResource, applying the given path relative
+	 * to the path of the underlying file of this resource descriptor.
+	 * 
 	 * @see org.springframework.util.StringUtils#applyRelativePath(String, String)
 	 */
 	@Override
@@ -181,6 +190,7 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 
 	/**
 	 * This implementation returns the name of the file.
+	 * 
 	 * @see java.io.File#getName()
 	 */
 	@Override
@@ -189,8 +199,9 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 	}
 
 	/**
-	 * This implementation returns a description that includes the absolute
-	 * path of the file.
+	 * This implementation returns a description that includes the absolute path of the
+	 * file.
+	 * 
 	 * @see java.io.File#getAbsolutePath()
 	 */
 	@Override
@@ -198,14 +209,13 @@ public class FileSystemResource extends AbstractResource implements WritableReso
 		return "file [" + this.file.getAbsolutePath() + "]";
 	}
 
-
 	/**
 	 * This implementation compares the underlying File references.
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return (obj == this ||
-			(obj instanceof FileSystemResource && this.path.equals(((FileSystemResource) obj).path)));
+		return (obj == this || (obj instanceof FileSystemResource
+				&& this.path.equals(((FileSystemResource) obj).path)));
 	}
 
 	/**
