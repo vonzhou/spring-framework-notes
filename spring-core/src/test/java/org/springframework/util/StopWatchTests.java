@@ -16,6 +16,7 @@
 
 package org.springframework.util;
 
+import org.apache.log4j.Logger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,6 +29,8 @@ import static org.junit.Assert.*;
  * @author Sam Brannen
  */
 public class StopWatchTests {
+
+	private static final Logger logger = Logger.getLogger(StopWatchTests.class);
 
 	private final StopWatch sw = new StopWatch();
 
@@ -68,6 +71,10 @@ public class StopWatchTests {
 
 		assertTrue(sw.getTaskCount() == 2);
 		String pp = sw.prettyPrint();
+
+		 System.out.println(pp);
+//		logger.info(pp);
+
 		assertTrue(pp.contains(name1));
 		assertTrue(pp.contains(name2));
 
