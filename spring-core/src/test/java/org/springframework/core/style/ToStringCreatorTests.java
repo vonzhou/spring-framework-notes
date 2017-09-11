@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 import static org.junit.Assert.*;
@@ -37,22 +37,24 @@ public class ToStringCreatorTests {
 
 	private SomeObject s1, s2, s3;
 
-
 	@Before
 	public void setUp() throws Exception {
 		s1 = new SomeObject() {
+
 			@Override
 			public String toString() {
 				return "A";
 			}
 		};
 		s2 = new SomeObject() {
+
 			@Override
 			public String toString() {
 				return "B";
 			}
 		};
 		s3 = new SomeObject() {
+
 			@Override
 			public String toString() {
 				return "C";
@@ -62,15 +64,20 @@ public class ToStringCreatorTests {
 
 	@Test
 	public void defaultStyleMap() {
+		System.out.println(ClassUtils.getShortName(this.getClass()));
 		final Map<String, String> map = getMap();
 		Object stringy = new Object() {
+
 			@Override
 			public String toString() {
-				return new ToStringCreator(this).append("familyFavoriteSport", map).toString();
+				return new ToStringCreator(this).append("familyFavoriteSport",
+						map).toString();
 			}
 		};
-		assertEquals("[ToStringCreatorTests.4@" + ObjectUtils.getIdentityHexString(stringy) +
-				" familyFavoriteSport = map['Keri' -> 'Softball', 'Scot' -> 'Fishing', 'Keith' -> 'Flag Football']]",
+		System.out.println(stringy.toString());
+		assertEquals("[ToStringCreatorTests.4@"
+				+ ObjectUtils.getIdentityHexString(stringy)
+				+ " familyFavoriteSport = map['Keri' -> 'Softball', 'Scot' -> 'Fishing', 'Keith' -> 'Flag Football']]",
 				stringy.toString());
 	}
 
@@ -84,17 +91,18 @@ public class ToStringCreatorTests {
 
 	@Test
 	public void defaultStyleArray() {
-		SomeObject[] array = new SomeObject[] {s1, s2, s3};
+		SomeObject[] array = new SomeObject[] { s1, s2, s3 };
 		String str = new ToStringCreator(array).toString();
-		assertEquals("[@" + ObjectUtils.getIdentityHexString(array) +
-				" array<ToStringCreatorTests.SomeObject>[A, B, C]]", str);
+		assertEquals("[@" + ObjectUtils.getIdentityHexString(array)
+				+ " array<ToStringCreatorTests.SomeObject>[A, B, C]]", str);
 	}
 
 	@Test
 	public void primitiveArrays() {
-		int[] integers = new int[] {0, 1, 2, 3, 4};
+		int[] integers = new int[] { 0, 1, 2, 3, 4 };
 		String str = new ToStringCreator(integers).toString();
-		assertEquals("[@" + ObjectUtils.getIdentityHexString(integers) + " array<Integer>[0, 1, 2, 3, 4]]", str);
+		assertEquals("[@" + ObjectUtils.getIdentityHexString(integers)
+				+ " array<Integer>[0, 1, 2, 3, 4]]", str);
 	}
 
 	@Test
@@ -104,8 +112,8 @@ public class ToStringCreatorTests {
 		list.add(s2);
 		list.add(s3);
 		String str = new ToStringCreator(this).append("myLetters", list).toString();
-		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this) + " myLetters = list[A, B, C]]",
-				str);
+		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this)
+				+ " myLetters = list[A, B, C]]", str);
 	}
 
 	@Test
@@ -115,23 +123,25 @@ public class ToStringCreatorTests {
 		set.add(s2);
 		set.add(s3);
 		String str = new ToStringCreator(this).append("myLetters", set).toString();
-		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this) + " myLetters = set[A, B, C]]", str);
+		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this)
+				+ " myLetters = set[A, B, C]]", str);
 	}
 
 	@Test
 	public void appendClass() {
-		String str = new ToStringCreator(this).append("myClass", this.getClass()).toString();
-		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this) +
-				" myClass = ToStringCreatorTests]", str);
+		String str = new ToStringCreator(this).append("myClass",
+				this.getClass()).toString();
+		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this)
+				+ " myClass = ToStringCreatorTests]", str);
 	}
 
 	@Test
 	public void appendMethod() throws Exception {
-		String str = new ToStringCreator(this).append("myMethod", this.getClass().getMethod("appendMethod")).toString();
-		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this) +
-				" myMethod = appendMethod@ToStringCreatorTests]", str);
+		String str = new ToStringCreator(this).append("myMethod",
+				this.getClass().getMethod("appendMethod")).toString();
+		assertEquals("[ToStringCreatorTests@" + ObjectUtils.getIdentityHexString(this)
+				+ " myMethod = appendMethod@ToStringCreatorTests]", str);
 	}
-
 
 	public static class SomeObject {
 	}
