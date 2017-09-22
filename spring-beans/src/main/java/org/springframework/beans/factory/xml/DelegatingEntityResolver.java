@@ -25,8 +25,8 @@ import org.xml.sax.SAXException;
 import org.springframework.util.Assert;
 
 /**
- * {@link EntityResolver} implementation that delegates to a {@link BeansDtdResolver}
- * and a {@link PluggableSchemaResolver} for DTDs and XML schemas, respectively.
+ * {@link EntityResolver} implementation that delegates to a {@link BeansDtdResolver} and
+ * a {@link PluggableSchemaResolver} for DTDs and XML schemas, respectively.
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -43,19 +43,19 @@ public class DelegatingEntityResolver implements EntityResolver {
 	/** Suffix for schema definition files */
 	public static final String XSD_SUFFIX = ".xsd";
 
-
 	private final EntityResolver dtdResolver;
 
 	private final EntityResolver schemaResolver;
 
-
 	/**
-	 * Create a new DelegatingEntityResolver that delegates to
-	 * a default {@link BeansDtdResolver} and a default {@link PluggableSchemaResolver}.
-	 * <p>Configures the {@link PluggableSchemaResolver} with the supplied
+	 * Create a new DelegatingEntityResolver that delegates to a default
+	 * {@link BeansDtdResolver} and a default {@link PluggableSchemaResolver}.
+	 * <p>
+	 * Configures the {@link PluggableSchemaResolver} with the supplied
 	 * {@link ClassLoader}.
-	 * @param classLoader the ClassLoader to use for loading
-	 * (can be {@code null}) to use the default ClassLoader)
+	 * 
+	 * @param classLoader the ClassLoader to use for loading (can be {@code null}) to use
+	 *        the default ClassLoader)
 	 */
 	public DelegatingEntityResolver(ClassLoader classLoader) {
 		this.dtdResolver = new BeansDtdResolver();
@@ -63,21 +63,27 @@ public class DelegatingEntityResolver implements EntityResolver {
 	}
 
 	/**
-	 * Create a new DelegatingEntityResolver that delegates to
-	 * the given {@link EntityResolver EntityResolvers}.
+	 * Create a new DelegatingEntityResolver that delegates to the given
+	 * {@link EntityResolver EntityResolvers}.
+	 * 
 	 * @param dtdResolver the EntityResolver to resolve DTDs with
 	 * @param schemaResolver the EntityResolver to resolve XML schemas with
 	 */
-	public DelegatingEntityResolver(EntityResolver dtdResolver, EntityResolver schemaResolver) {
+	public DelegatingEntityResolver(EntityResolver dtdResolver,
+			EntityResolver schemaResolver) {
 		Assert.notNull(dtdResolver, "'dtdResolver' is required");
 		Assert.notNull(schemaResolver, "'schemaResolver' is required");
 		this.dtdResolver = dtdResolver;
 		this.schemaResolver = schemaResolver;
 	}
 
-
+	/**
+	 * 分别调用 org.springframework.beans.factory.xml.BeansDtdResolver.resolveEntity(String,
+	 * String) 和 
+	 */
 	@Override
-	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+	public InputSource resolveEntity(String publicId, String systemId)
+			throws SAXException, IOException {
 		if (systemId != null) {
 			if (systemId.endsWith(DTD_SUFFIX)) {
 				return this.dtdResolver.resolveEntity(publicId, systemId);
@@ -89,11 +95,10 @@ public class DelegatingEntityResolver implements EntityResolver {
 		return null;
 	}
 
-
 	@Override
 	public String toString() {
-		return "EntityResolver delegating " + XSD_SUFFIX + " to " + this.schemaResolver +
-				" and " + DTD_SUFFIX + " to " + this.dtdResolver;
+		return "EntityResolver delegating " + XSD_SUFFIX + " to " + this.schemaResolver
+				+ " and " + DTD_SUFFIX + " to " + this.dtdResolver;
 	}
 
 }
