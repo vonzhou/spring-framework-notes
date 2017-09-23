@@ -416,7 +416,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
-	 * Actually load bean definitions from the specified XML file.
+	 * ��ָ���� XML �ļ���ʵ�ʼ��� bean definitions���������� SAX ���� XML �õ� Document
+	 * ����Ȼ����� Document ע�� BeanDefinition
 	 * 
 	 * @param inputSource the SAX InputSource to read from
 	 * @param resource the resource descriptor for the XML file
@@ -478,6 +479,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
+	 * ��ȡ��Դ����֤ģʽ (DTD, XSD)�����ָ������֤ģʽ�����Ե���
+	 * org.springframework.beans.factory.xml.XmlBeanDefinitionReader.setValidationMode(int)
+	 * ����ָ��������ʹ��ָ��ģʽ�� �����Զ����
+	 * <p>
 	 * Gets the validation mode for the specified {@link Resource}. If no explicit
 	 * validation mode has been configured then the validation mode is
 	 * {@link #detectValidationMode detected}.
@@ -487,10 +492,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	protected int getValidationModeForResource(Resource resource) {
 		int validationModeToUse = getValidationMode();
-		if (validationModeToUse != VALIDATION_AUTO) {
+		if (validationModeToUse != VALIDATION_AUTO) { //
 			return validationModeToUse;
 		}
-		int detectedMode = detectValidationMode(resource);
+		int detectedMode = detectValidationMode(resource); //
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
 		}
@@ -531,6 +536,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try {
+			// �Ƚ϶����Ĺ��ܷ�װ��һ Class �У�������ֱ��һ���������ã�
 			return this.validationModeDetector.detectValidationMode(inputStream);
 		}
 		catch (IOException ex) {
