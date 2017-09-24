@@ -141,7 +141,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
-		preProcessXml(root); // �ṩ����չ�㣬ģ�巽��ģʽ��
+		preProcessXml(root); // 解析 bean definition 前后提供扩展点，模板方法模式
 		parseBeanDefinitions(root, this.delegate);
 		postProcessXml(root);
 
@@ -164,7 +164,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 */
 	protected void parseBeanDefinitions(Element root,
 			BeanDefinitionParserDelegate delegate) {
-		if (delegate.isDefaultNamespace(root)) { // ��Ԫ�� , beans
+		if (delegate.isDefaultNamespace(root)) { // ��Ԫ�� , beans
 			NodeList nl = root.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node node = nl.item(i);
@@ -185,7 +185,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	}
 
 	/**
-	 * Ĭ�ϱ�ǩ�Ľ���
+	 * Ĭ�ϱ�ǩ�Ľ���
 	 */
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
@@ -320,11 +320,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 */
 	protected void processBeanDefinition(Element ele,
 			BeanDefinitionParserDelegate delegate) {
+		// 解析该 bean 元素
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
-		if (bdHolder != null) {
+		if (bdHolder != null) { // 如果必要，进一步装饰
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
-				// Register the final decorated instance.
+				// Register the final decorated instance. 注册 bean definition
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder,
 						getReaderContext().getRegistry());
 			}
@@ -332,7 +333,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				getReaderContext().error("Failed to register bean definition with name '"
 						+ bdHolder.getBeanName() + "'", ele, ex);
 			}
-			// Send registration event. Bean ע�����
+			// Send registration event. Bean ע�����
 			getReaderContext().fireComponentRegistered(
 					new BeanComponentDefinition(bdHolder));
 		}

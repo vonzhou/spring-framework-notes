@@ -879,9 +879,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		BeanDefinition oldBeanDefinition;
 
+		// 注册前，判断该 bean name 是否已经存在
 		oldBeanDefinition = this.beanDefinitionMap.get(beanName);
 		if (oldBeanDefinition != null) {
-			if (!isAllowBeanDefinitionOverriding()) {
+			if (!isAllowBeanDefinitionOverriding()) { // 如果已经存在，并且不运行覆盖，那么就出错
 				throw new BeanDefinitionStoreException(
 						beanDefinition.getResourceDescription(), beanName,
 						"Cannot register bean definition [" + beanDefinition
@@ -912,6 +913,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							+ oldBeanDefinition + "] with [" + beanDefinition + "]");
 				}
 			}
+			// 注册该 bean definition
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
@@ -942,6 +944,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			this.frozenBeanDefinitionNames = null;
 		}
 
+		// 重置缓存
 		if (oldBeanDefinition != null || containsSingleton(beanName)) {
 			resetBeanDefinition(beanName);
 		}

@@ -435,7 +435,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
-	 * ½âÎö bean ÔªËØ£¬Èç¹û½âÎöÓĞ´íÔò·µ»Ø null
+	 * ï¿½ï¿½ï¿½ï¿½ bean Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ï¿½ò·µ»ï¿½ null
 	 * <p>
 	 * Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
@@ -451,9 +451,9 @@ public class BeanDefinitionParserDelegate {
 	 */
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele,
 			BeanDefinition containingBean) {
-		// ½âÎö id ÊôĞÔ
+		// ï¿½ï¿½ï¿½ï¿½ id ï¿½ï¿½ï¿½ï¿½
 		String id = ele.getAttribute(ID_ATTRIBUTE);
-		// ½âÎö name ÊôĞÔ£¬¿É¶à¸ö
+		// ï¿½ï¿½ï¿½ï¿½ name ï¿½ï¿½ï¿½Ô£ï¿½ï¿½É¶ï¿½ï¿½
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
 		List<String> aliases = new ArrayList<String>();
@@ -463,7 +463,7 @@ public class BeanDefinitionParserDelegate {
 			aliases.addAll(Arrays.asList(nameArr));
 		}
 
-		// Èç¹ûÃ»ÓĞÖ¸¶¨ id ÔòÊ¹ÓÃ name ÊôĞÔµÄµÚÒ»¸öÖµ×÷Îª bean name
+		// ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ö¸ï¿½ï¿½ id ï¿½ï¿½Ê¹ï¿½ï¿½ name ï¿½ï¿½ï¿½ÔµÄµï¿½Ò»ï¿½ï¿½Öµï¿½ï¿½Îª bean name
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
@@ -473,7 +473,7 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
-		if (containingBean == null) { // ¶¥¼¶ bean Ğ£Ñé bean name µÄÎ¨Ò»ĞÔ
+		if (containingBean == null) { // ï¿½ï¿½ï¿½ï¿½ bean Ğ£ï¿½ï¿½ bean name ï¿½ï¿½Î¨Ò»ï¿½ï¿½
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
@@ -559,23 +559,25 @@ public class BeanDefinitionParserDelegate {
 			if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 				parent = ele.getAttribute(PARENT_ATTRIBUTE);
 			}
-			// ¸ù¾İ class name ¹¹½¨ GenericBeanDefinition
+			// ï¿½ï¿½ï¿½ï¿½ class name ï¿½ï¿½ï¿½ï¿½ GenericBeanDefinition
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
 
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
 			bd.setDescription(
 					DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
-			// ½âÎö meta ×Ó±êÇ©
+			// ï¿½ï¿½ï¿½ï¿½ meta ï¿½Ó±ï¿½Ç©
 			parseMetaElements(ele, bd);
-			// ½âÎö lookup-method ×Ó±êÇ©
+			// ï¿½ï¿½ï¿½ï¿½ lookup-method ï¿½Ó±ï¿½Ç©
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
-			// ½âÎö replace-method ×Ó±êÇ©
+			// ï¿½ï¿½ï¿½ï¿½ replace-method ï¿½Ó±ï¿½Ç©
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
-			// ½âÎö constructor-arg ×Ó±êÇ©
+			// ï¿½ï¿½ï¿½ï¿½ constructor-arg ï¿½Ó±ï¿½Ç©
 			parseConstructorArgElements(ele, bd);
+			// è§£æ property å­å…ƒç´ 
 			parsePropertyElements(ele, bd);
+			// è§£æ qualifier å­å…ƒç´ 
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -601,8 +603,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
-	 * ½âÎö bean µÄ¸÷ÖÖÊôĞÔ Apply the attributes of the given bean element to the given bean *
-	 * definition.
+	 * ï¿½ï¿½ï¿½ï¿½ bean ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Apply the attributes of the given bean element to the given
+	 * bean * definition.
 	 * 
 	 * @param ele bean declaration element
 	 * @param beanName bean name
@@ -664,7 +666,7 @@ public class BeanDefinitionParserDelegate {
 			bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
 		}
 
-		// ½âÎö init-method ÊôĞÔ
+		// ï¿½ï¿½ï¿½ï¿½ init-method ï¿½ï¿½ï¿½ï¿½
 		if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {
 			String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);
 			if (!"".equals(initMethodName)) {
@@ -678,7 +680,7 @@ public class BeanDefinitionParserDelegate {
 			}
 		}
 
-		// ½âÎö destroy-method ÊôĞÔ
+		// ï¿½ï¿½ï¿½ï¿½ destroy-method ï¿½ï¿½ï¿½ï¿½
 		if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
 			String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
 			bd.setDestroyMethodName(destroyMethodName);
@@ -891,7 +893,7 @@ public class BeanDefinitionParserDelegate {
 							valueHolder.setName(nameAttr);
 						}
 						valueHolder.setSource(extractSource(ele));
-						// ²»ÔÊĞíÖØ¸´Ö¸¶¨Ä³¸ö index
+						// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½Ö¸ï¿½ï¿½Ä³ï¿½ï¿½ index
 						if (bd.getConstructorArgumentValues().hasIndexedArgumentValue(
 								index)) {
 							error("Ambiguous constructor-arg entries for index " + index,
@@ -912,7 +914,7 @@ public class BeanDefinitionParserDelegate {
 						ele);
 			}
 		}
-		else { // Ã»ÓĞ index ÊôĞÔ£¬Ôò¸ù¾İÀàĞÍÆ¥Åä
+		else { // Ã»ï¿½ï¿½ index ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½
 			try {
 				this.parseState.push(new ConstructorArgumentEntry());
 				Object value = parsePropertyValue(ele, bd, null);
@@ -1008,6 +1010,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * è§£æå…ƒç´ çš„æŸä¸ªå±æ€§å€¼ã€‚ç”¨äºè§£ææ„é€ å‡½æ•°å‚æ•°æ—¶ï¼ŒpropertyName ä¸ºç©ºã€‚
+	 * <p>
 	 * Get the value of a property element. May be a list etc. Also used for constructor
 	 * arguments, "propertyName" being null in this case.
 	 */
@@ -1037,6 +1041,7 @@ public class BeanDefinitionParserDelegate {
 
 		boolean hasRefAttribute = ele.hasAttribute(REF_ATTRIBUTE);
 		boolean hasValueAttribute = ele.hasAttribute(VALUE_ATTRIBUTE);
+		// å‡ºé”™çš„é…ç½®ï¼šåŒæ—¶å…·æœ‰ ref å’Œ value å±æ€§ï¼›å­˜åœ¨ ref æˆ–è€… value å±æ€§ï¼Œä¸”æœ‰å­å…ƒç´ ã€‚
 		if ((hasRefAttribute && hasValueAttribute)
 				|| ((hasRefAttribute || hasValueAttribute) && subElement != null)) {
 			error(elementName
@@ -1059,7 +1064,7 @@ public class BeanDefinitionParserDelegate {
 			valueHolder.setSource(extractSource(ele));
 			return valueHolder;
 		}
-		else if (subElement != null) {
+		else if (subElement != null) { // å±æ€§å€¼åŒ…å«åœ¨å­å…ƒç´ ä¸­
 			return parsePropertySubElement(subElement, bd);
 		}
 		else {
@@ -1141,7 +1146,7 @@ public class BeanDefinitionParserDelegate {
 		else if (nodeNameEquals(ele, SET_ELEMENT)) {
 			return parseSetElement(ele, bd);
 		}
-		else if (nodeNameEquals(ele, MAP_ELEMENT)) {
+		else if (nodeNameEquals(ele, MAP_ELEMENT)) {// å¯¹ map å­å…ƒç´ çš„å¤„ç†
 			return parseMapElement(ele, bd);
 		}
 		else if (nodeNameEquals(ele, PROPS_ELEMENT)) {
@@ -1511,14 +1516,14 @@ public class BeanDefinitionParserDelegate {
 
 		BeanDefinitionHolder finalDefinition = definitionHolder;
 
-		// Decorate based on custom attributes first.
+		// Decorate based on custom attributes first. éå†æ‰€æœ‰çš„å±æ€§ï¼Œçœ‹æ˜¯å¦éœ€è¦è£…é¥°
 		NamedNodeMap attributes = ele.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
 			Node node = attributes.item(i);
 			finalDefinition = decorateIfRequired(node, finalDefinition, containingBd);
 		}
 
-		// Decorate based on custom nested elements.
+		// Decorate based on custom nested elements. éå†æ‰€æœ‰çš„å­èŠ‚ç‚¹ï¼Œçœ‹æ˜¯å¦è£…é¥°
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
