@@ -1493,6 +1493,7 @@ public class BeanDefinitionParserDelegate {
 		return parseCustomElement(ele, null);
 	}
 
+	// containingBd 为 parent bean，顶层元素的解析时为 null
 	public BeanDefinition parseCustomElement(Element ele, BeanDefinition containingBd) {
 		String namespaceUri = getNamespaceURI(ele);
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(
@@ -1502,6 +1503,7 @@ public class BeanDefinitionParserDelegate {
 					+ namespaceUri + "]", ele);
 			return null;
 		}
+		// 调用自定义的 NamespaceHandler 进行解析
 		return handler.parse(ele,
 				new ParserContext(this.readerContext, this, containingBd));
 	}
