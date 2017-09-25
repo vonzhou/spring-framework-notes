@@ -106,7 +106,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName,
 			boolean shouldPostProcess) {
 		if (factory.isSingleton() && containsSingleton(beanName)) {
-			synchronized (getSingletonMutex()) {
+			synchronized (getSingletonMutex()) { // 保证全局唯一
 				Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
 					object = doGetObjectFromFactoryBean(factory, beanName);
@@ -119,7 +119,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 						object = alreadyThere;
 					}
 					else {
-						if (object != null && shouldPostProcess) {
+						if (object != null && shouldPostProcess) { // 获取单例后，执行后处理器
 							try {
 								object = postProcessObjectFromFactoryBean(object,
 										beanName);
@@ -183,7 +183,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 				}
 			}
 			else {
-				object = factory.getObject();
+				object = factory.getObject();// 本源
 			}
 		}
 		catch (FactoryBeanNotInitializedException ex) {

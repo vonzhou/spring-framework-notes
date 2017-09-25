@@ -201,11 +201,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry
 	 * currently created singleton (resolving a circular reference).
 	 * 
 	 * @param beanName the name of the bean to look for
-	 * @param allowEarlyReference whether early references should be created or not
+	 * @param allowEarlyReference whether early references should be created or not 允许早期依赖
 	 * @return the registered singleton object, or {@code null} if none found
 	 */
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		// 查缓存
 		Object singletonObject = this.singletonObjects.get(beanName);
+		// 看看有没有正在创建?
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
 				singletonObject = this.earlySingletonObjects.get(beanName);
@@ -214,6 +216,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry
 							beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
+						// 更新缓存 earlySingletonObjects 和 singletonFactories 互斥
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
 					}
@@ -246,14 +249,14 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry
 					logger.debug("Creating shared instance of singleton bean '" + beanName
 							+ "'");
 				}
-				beforeSingletonCreation(beanName);
+				beforeSingletonCreation(beanName); // -------------------
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
 				if (recordSuppressedExceptions) {
 					this.suppressedExceptions = new LinkedHashSet<Exception>();
 				}
 				try {
-					singletonObject = singletonFactory.getObject();
+					singletonObject = singletonFactory.getObject(); // =====回调=====
 					newSingleton = true;
 				}
 				catch (IllegalStateException ex) {
@@ -276,8 +279,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
-					afterSingletonCreation(beanName);
+					afterSingletonCreation(beanName); // -------------------
 				}
+				// 创建成功后，更新缓存
 				if (newSingleton) {
 					addSingleton(beanName, singletonObject);
 				}

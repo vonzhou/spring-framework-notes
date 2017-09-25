@@ -499,10 +499,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
-			// Give BeanPostProcessors a chance to return a proxy instead of the target
-			// bean instance.
+			// 给 BeanPostProcessors 一个机会返回代理来替代目标 bean
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
-			if (bean != null) {
+			if (bean != null) { // 注意这里的短路操作
 				return bean;
 			}
 		}
@@ -1098,6 +1097,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
 		Object bean = null;
+		// 保证解析一次， 立个 flag
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
@@ -1105,6 +1105,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				if (targetType != null) {
 					bean = applyBeanPostProcessorsBeforeInstantiation(targetType,
 							beanName);
+					// 如果这里返回的 bean 非空，那么就不会经历普通 bean 的创建过程，所以在这里保证所有的 BeanPostProcessor
+					// 在实例化后执行
 					if (bean != null) {
 						bean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
 					}
