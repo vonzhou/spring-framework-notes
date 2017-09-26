@@ -33,8 +33,9 @@ import org.springframework.util.StringUtils;
 /**
  * Simple object instantiation strategy for use in a BeanFactory.
  *
- * <p>Does not support Method Injection, although it provides hooks for subclasses
- * to override to add Method Injection support, for example by overriding methods.
+ * <p>
+ * Does not support Method Injection, although it provides hooks for subclasses to
+ * override to add Method Injection support, for example by overriding methods.
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -44,20 +45,19 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 
 	private static final ThreadLocal<Method> currentlyInvokedFactoryMethod = new ThreadLocal<Method>();
 
-
 	/**
 	 * Return the factory method currently being invoked or {@code null} if none.
-	 * <p>Allows factory method implementations to determine whether the current
-	 * caller is the container itself as opposed to user code.
+	 * <p>
+	 * Allows factory method implementations to determine whether the current caller is
+	 * the container itself as opposed to user code.
 	 */
 	public static Method getCurrentlyInvokedFactoryMethod() {
 		return currentlyInvokedFactoryMethod.get();
 	}
 
-
 	@Override
 	public Object instantiate(RootBeanDefinition bd, String beanName, BeanFactory owner) {
-		// Don't override the class with CGLIB if no overrides.
+		// Don't override the class with CGLIB if no overrides.如果没有方法覆盖，直接使用反射
 		if (bd.getMethodOverrides().isEmpty()) {
 			Constructor<?> constructorToUse;
 			synchronized (bd.constructorArgumentLock) {
@@ -65,43 +65,51 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 				if (constructorToUse == null) {
 					final Class<?> clazz = bd.getBeanClass();
 					if (clazz.isInterface()) {
-						throw new BeanInstantiationException(clazz, "Specified class is an interface");
+						throw new BeanInstantiationException(clazz,
+								"Specified class is an interface");
 					}
 					try {
 						if (System.getSecurityManager() != null) {
-							constructorToUse = AccessController.doPrivileged(new PrivilegedExceptionAction<Constructor<?>>() {
-								@Override
-								public Constructor<?> run() throws Exception {
-									return clazz.getDeclaredConstructor((Class[]) null);
-								}
-							});
+							constructorToUse = AccessController.doPrivileged(
+									new PrivilegedExceptionAction<Constructor<?>>() {
+
+										@Override
+										public Constructor<?> run() throws Exception {
+											return clazz.getDeclaredConstructor(
+													(Class[]) null);
+										}
+									});
 						}
 						else {
-							constructorToUse =	clazz.getDeclaredConstructor((Class[]) null);
+							constructorToUse = clazz.getDeclaredConstructor(
+									(Class[]) null);
 						}
 						bd.resolvedConstructorOrFactoryMethod = constructorToUse;
 					}
 					catch (Throwable ex) {
-						throw new BeanInstantiationException(clazz, "No default constructor found", ex);
+						throw new BeanInstantiationException(clazz,
+								"No default constructor found", ex);
 					}
 				}
 			}
 			return BeanUtils.instantiateClass(constructorToUse);
 		}
 		else {
-			// Must generate CGLIB subclass.
+			// Must generate CGLIB subclass. 否则需要注入方法
 			return instantiateWithMethodInjection(bd, beanName, owner);
 		}
 	}
 
 	/**
 	 * Subclasses can override this method, which is implemented to throw
-	 * UnsupportedOperationException, if they can instantiate an object with
-	 * the Method Injection specified in the given RootBeanDefinition.
-	 * Instantiation should use a no-arg constructor.
+	 * UnsupportedOperationException, if they can instantiate an object with the Method
+	 * Injection specified in the given RootBeanDefinition. Instantiation should use a
+	 * no-arg constructor.
 	 */
-	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, String beanName, BeanFactory owner) {
-		throw new UnsupportedOperationException("Method Injection not supported in SimpleInstantiationStrategy");
+	protected Object instantiateWithMethodInjection(RootBeanDefinition bd,
+			String beanName, BeanFactory owner) {
+		throw new UnsupportedOperationException(
+				"Method Injection not supported in SimpleInstantiationStrategy");
 	}
 
 	@Override
@@ -112,6 +120,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			if (System.getSecurityManager() != null) {
 				// use own privileged to change accessibility (when security is on)
 				AccessController.doPrivileged(new PrivilegedAction<Object>() {
+
 					@Override
 					public Object run() {
 						ReflectionUtils.makeAccessible(ctor);
@@ -128,14 +137,15 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 
 	/**
 	 * Subclasses can override this method, which is implemented to throw
-	 * UnsupportedOperationException, if they can instantiate an object with
-	 * the Method Injection specified in the given RootBeanDefinition.
-	 * Instantiation should use the given constructor and parameters.
+	 * UnsupportedOperationException, if they can instantiate an object with the Method
+	 * Injection specified in the given RootBeanDefinition. Instantiation should use the
+	 * given constructor and parameters.
 	 */
-	protected Object instantiateWithMethodInjection(RootBeanDefinition bd, String beanName, BeanFactory owner,
-			Constructor<?> ctor, Object... args) {
+	protected Object instantiateWithMethodInjection(RootBeanDefinition bd,
+			String beanName, BeanFactory owner, Constructor<?> ctor, Object... args) {
 
-		throw new UnsupportedOperationException("Method Injection not supported in SimpleInstantiationStrategy");
+		throw new UnsupportedOperationException(
+				"Method Injection not supported in SimpleInstantiationStrategy");
 	}
 
 	@Override
@@ -145,6 +155,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 		try {
 			if (System.getSecurityManager() != null) {
 				AccessController.doPrivileged(new PrivilegedAction<Object>() {
+
 					@Override
 					public Object run() {
 						ReflectionUtils.makeAccessible(factoryMethod);
@@ -172,21 +183,31 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 		}
 		catch (IllegalArgumentException ex) {
 			throw new BeanInstantiationException(factoryMethod,
-					"Illegal arguments to factory method '" + factoryMethod.getName() + "'; " +
-					"args: " + StringUtils.arrayToCommaDelimitedString(args), ex);
+					"Illegal arguments to factory method '" + factoryMethod.getName()
+							+ "'; " + "args: "
+							+ StringUtils.arrayToCommaDelimitedString(args),
+					ex);
 		}
 		catch (IllegalAccessException ex) {
 			throw new BeanInstantiationException(factoryMethod,
-					"Cannot access factory method '" + factoryMethod.getName() + "'; is it public?", ex);
+					"Cannot access factory method '" + factoryMethod.getName()
+							+ "'; is it public?",
+					ex);
 		}
 		catch (InvocationTargetException ex) {
-			String msg = "Factory method '" + factoryMethod.getName() + "' threw exception";
-			if (bd.getFactoryBeanName() != null && owner instanceof ConfigurableBeanFactory &&
-					((ConfigurableBeanFactory) owner).isCurrentlyInCreation(bd.getFactoryBeanName())) {
-				msg = "Circular reference involving containing bean '" + bd.getFactoryBeanName() + "' - consider " +
-						"declaring the factory method as static for independence from its containing instance. " + msg;
+			String msg = "Factory method '" + factoryMethod.getName()
+					+ "' threw exception";
+			if (bd.getFactoryBeanName() != null
+					&& owner instanceof ConfigurableBeanFactory
+					&& ((ConfigurableBeanFactory) owner).isCurrentlyInCreation(
+							bd.getFactoryBeanName())) {
+				msg = "Circular reference involving containing bean '"
+						+ bd.getFactoryBeanName() + "' - consider "
+						+ "declaring the factory method as static for independence from its containing instance. "
+						+ msg;
 			}
-			throw new BeanInstantiationException(factoryMethod, msg, ex.getTargetException());
+			throw new BeanInstantiationException(factoryMethod, msg,
+					ex.getTargetException());
 		}
 	}
 

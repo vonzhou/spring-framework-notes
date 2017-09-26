@@ -1839,8 +1839,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport
 				registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName,
 						mbd, getBeanPostProcessors(), acc));
 			}
-			else {
-				// A bean with a custom scope...
+			else { // 自定义 scope 的处理
+					// A bean with a custom scope...
 				Scope scope = this.scopes.get(mbd.getScope());
 				if (scope == null) {
 					throw new IllegalStateException("No Scope registered for scope name '"
