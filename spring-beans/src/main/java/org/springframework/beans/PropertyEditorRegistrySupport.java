@@ -75,9 +75,9 @@ import org.springframework.core.io.support.ResourceArrayPropertyEditor;
 import org.springframework.util.ClassUtils;
 
 /**
- * Base implementation of the {@link PropertyEditorRegistry} interface.
- * Provides management of default editors and custom editors.
- * Mainly serves as base class for {@link BeanWrapperImpl}.
+ * Base implementation of the {@link PropertyEditorRegistry} interface. Provides
+ * management of default editors and custom editors. Mainly serves as base class for
+ * {@link BeanWrapperImpl}.
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
@@ -110,7 +110,6 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 		}
 	}
 
-
 	private ConversionService conversionService;
 
 	private boolean defaultEditorsActive = false;
@@ -127,10 +126,9 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	private Map<Class<?>, PropertyEditor> customEditorCache;
 
-
 	/**
-	 * Specify a Spring 3.0 ConversionService to use for converting
-	 * property values, as an alternative to JavaBeans PropertyEditors.
+	 * Specify a Spring 3.0 ConversionService to use for converting property values, as an
+	 * alternative to JavaBeans PropertyEditors.
 	 */
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;
@@ -143,14 +141,13 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 		return this.conversionService;
 	}
 
-
-	//---------------------------------------------------------------------
+	// ---------------------------------------------------------------------
 	// Management of default editors
-	//---------------------------------------------------------------------
+	// ---------------------------------------------------------------------
 
 	/**
-	 * Activate the default editors for this registry instance,
-	 * allowing for lazily registering default editors when needed.
+	 * Activate the default editors for this registry instance, allowing for lazily
+	 * registering default editors when needed.
 	 */
 	protected void registerDefaultEditors() {
 		this.defaultEditorsActive = true;
@@ -158,10 +155,12 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Activate config value editors which are only intended for configuration purposes,
-	 * such as {@link org.springframework.beans.propertyeditors.StringArrayPropertyEditor}.
-	 * <p>Those editors are not registered by default simply because they are in
-	 * general inappropriate for data binding purposes. Of course, you may register
-	 * them individually in any case, through {@link #registerCustomEditor}.
+	 * such as
+	 * {@link org.springframework.beans.propertyeditors.StringArrayPropertyEditor}.
+	 * <p>
+	 * Those editors are not registered by default simply because they are in general
+	 * inappropriate for data binding purposes. Of course, you may register them
+	 * individually in any case, through {@link #registerCustomEditor}.
 	 */
 	public void useConfigValueEditors() {
 		this.configValueEditorsActive = true;
@@ -169,14 +168,17 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Override the default editor for the specified type with the given property editor.
-	 * <p>Note that this is different from registering a custom editor in that the editor
+	 * <p>
+	 * Note that this is different from registering a custom editor in that the editor
 	 * semantically still is a default editor. A ConversionService will override such a
 	 * default editor, whereas custom editors usually override the ConversionService.
+	 * 
 	 * @param requiredType the type of the property
 	 * @param propertyEditor the editor to register
 	 * @see #registerCustomEditor(Class, PropertyEditor)
 	 */
-	public void overrideDefaultEditor(Class<?> requiredType, PropertyEditor propertyEditor) {
+	public void overrideDefaultEditor(Class<?> requiredType,
+			PropertyEditor propertyEditor) {
 		if (this.overriddenDefaultEditors == null) {
 			this.overriddenDefaultEditors = new HashMap<Class<?>, PropertyEditor>();
 		}
@@ -185,7 +187,9 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Retrieve the default editor for the given property type, if any.
-	 * <p>Lazily registers the default editors, if they are active.
+	 * <p>
+	 * Lazily registers the default editors, if they are active.
+	 * 
 	 * @param requiredType type of the property
 	 * @return the default editor, or {@code null} if none found
 	 * @see #registerDefaultEditors
@@ -207,6 +211,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
+	 * Spring 中用于封装 bean 的是 BeanWrapper， 默认实现 BeanWrapperImpl 继承自该类，注册了默认的常用的属性编辑器
+	 * <p>
 	 * Actually register the default editors for this registry instance.
 	 */
 	private void createDefaultEditors() {
@@ -239,9 +245,11 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 		// Default instances of collection editors.
 		// Can be overridden by registering custom instances of those as custom editors.
-		this.defaultEditors.put(Collection.class, new CustomCollectionEditor(Collection.class));
+		this.defaultEditors.put(Collection.class,
+				new CustomCollectionEditor(Collection.class));
 		this.defaultEditors.put(Set.class, new CustomCollectionEditor(Set.class));
-		this.defaultEditors.put(SortedSet.class, new CustomCollectionEditor(SortedSet.class));
+		this.defaultEditors.put(SortedSet.class,
+				new CustomCollectionEditor(SortedSet.class));
 		this.defaultEditors.put(List.class, new CustomCollectionEditor(List.class));
 		this.defaultEditors.put(SortedMap.class, new CustomMapEditor(SortedMap.class));
 
@@ -253,7 +261,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 		this.defaultEditors.put(char.class, new CharacterEditor(false));
 		this.defaultEditors.put(Character.class, new CharacterEditor(true));
 
-		// Spring's CustomBooleanEditor accepts more flag values than the JDK's default editor.
+		// Spring's CustomBooleanEditor accepts more flag values than the JDK's default
+		// editor.
 		this.defaultEditors.put(boolean.class, new CustomBooleanEditor(false));
 		this.defaultEditors.put(Boolean.class, new CustomBooleanEditor(true));
 
@@ -264,15 +273,19 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 		this.defaultEditors.put(short.class, new CustomNumberEditor(Short.class, false));
 		this.defaultEditors.put(Short.class, new CustomNumberEditor(Short.class, true));
 		this.defaultEditors.put(int.class, new CustomNumberEditor(Integer.class, false));
-		this.defaultEditors.put(Integer.class, new CustomNumberEditor(Integer.class, true));
+		this.defaultEditors.put(Integer.class,
+				new CustomNumberEditor(Integer.class, true));
 		this.defaultEditors.put(long.class, new CustomNumberEditor(Long.class, false));
 		this.defaultEditors.put(Long.class, new CustomNumberEditor(Long.class, true));
 		this.defaultEditors.put(float.class, new CustomNumberEditor(Float.class, false));
 		this.defaultEditors.put(Float.class, new CustomNumberEditor(Float.class, true));
-		this.defaultEditors.put(double.class, new CustomNumberEditor(Double.class, false));
+		this.defaultEditors.put(double.class,
+				new CustomNumberEditor(Double.class, false));
 		this.defaultEditors.put(Double.class, new CustomNumberEditor(Double.class, true));
-		this.defaultEditors.put(BigDecimal.class, new CustomNumberEditor(BigDecimal.class, true));
-		this.defaultEditors.put(BigInteger.class, new CustomNumberEditor(BigInteger.class, true));
+		this.defaultEditors.put(BigDecimal.class,
+				new CustomNumberEditor(BigDecimal.class, true));
+		this.defaultEditors.put(BigInteger.class,
+				new CustomNumberEditor(BigInteger.class, true));
 
 		// Only register config value editors if explicitly requested.
 		if (this.configValueEditorsActive) {
@@ -286,6 +299,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Copy the default editors registered in this instance to the given target registry.
+	 * 
 	 * @param target the target registry to copy to
 	 */
 	protected void copyDefaultEditorsTo(PropertyEditorRegistrySupport target) {
@@ -295,26 +309,30 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 		target.overriddenDefaultEditors = this.overriddenDefaultEditors;
 	}
 
-
-	//---------------------------------------------------------------------
+	// ---------------------------------------------------------------------
 	// Management of custom editors
-	//---------------------------------------------------------------------
+	// ---------------------------------------------------------------------
 
 	@Override
-	public void registerCustomEditor(Class<?> requiredType, PropertyEditor propertyEditor) {
+	public void registerCustomEditor(Class<?> requiredType,
+			PropertyEditor propertyEditor) {
 		registerCustomEditor(requiredType, null, propertyEditor);
 	}
 
 	@Override
-	public void registerCustomEditor(Class<?> requiredType, String propertyPath, PropertyEditor propertyEditor) {
+	public void registerCustomEditor(Class<?> requiredType, String propertyPath,
+			PropertyEditor propertyEditor) {
 		if (requiredType == null && propertyPath == null) {
-			throw new IllegalArgumentException("Either requiredType or propertyPath is required");
+			throw new IllegalArgumentException(
+					"Either requiredType or propertyPath is required");
 		}
 		if (propertyPath != null) {
 			if (this.customEditorsForPath == null) {
-				this.customEditorsForPath = new LinkedHashMap<String, CustomEditorHolder>(16);
+				this.customEditorsForPath = new LinkedHashMap<String, CustomEditorHolder>(
+						16);
 			}
-			this.customEditorsForPath.put(propertyPath, new CustomEditorHolder(propertyEditor, requiredType));
+			this.customEditorsForPath.put(propertyPath,
+					new CustomEditorHolder(propertyEditor, requiredType));
 		}
 		else {
 			if (this.customEditors == null) {
@@ -335,7 +353,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 				if (editor == null) {
 					List<String> strippedPaths = new LinkedList<String>();
 					addStrippedPropertyPaths(strippedPaths, "", propertyPath);
-					for (Iterator<String> it = strippedPaths.iterator(); it.hasNext() && editor == null;) {
+					for (Iterator<String> it = strippedPaths.iterator(); it.hasNext()
+							&& editor == null;) {
 						String strippedPath = it.next();
 						editor = getCustomEditor(strippedPath, requiredType);
 					}
@@ -353,12 +372,13 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
-	 * Determine whether this registry contains a custom editor
-	 * for the specified array/collection element.
-	 * @param elementType the target type of the element
-	 * (can be {@code null} if not known)
-	 * @param propertyPath the property path (typically of the array/collection;
-	 * can be {@code null} if not known)
+	 * Determine whether this registry contains a custom editor for the specified
+	 * array/collection element.
+	 * 
+	 * @param elementType the target type of the element (can be {@code null} if not
+	 *        known)
+	 * @param propertyPath the property path (typically of the array/collection; can be
+	 *        {@code null} if not known)
 	 * @return whether a matching custom editor has been found
 	 */
 	public boolean hasCustomEditorForElement(Class<?> elementType, String propertyPath) {
@@ -372,16 +392,20 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 			}
 		}
 		// No property-specific editor -> check type-specific editor.
-		return (elementType != null && this.customEditors != null && this.customEditors.containsKey(elementType));
+		return (elementType != null && this.customEditors != null
+				&& this.customEditors.containsKey(elementType));
 	}
 
 	/**
 	 * Determine the property type for the given property path.
-	 * <p>Called by {@link #findCustomEditor} if no required type has been specified,
-	 * to be able to find a type-specific editor even if just given a property path.
-	 * <p>The default implementation always returns {@code null}.
-	 * BeanWrapperImpl overrides this with the standard {@code getPropertyType}
-	 * method as defined by the BeanWrapper interface.
+	 * <p>
+	 * Called by {@link #findCustomEditor} if no required type has been specified, to be
+	 * able to find a type-specific editor even if just given a property path.
+	 * <p>
+	 * The default implementation always returns {@code null}. BeanWrapperImpl overrides
+	 * this with the standard {@code getPropertyType} method as defined by the BeanWrapper
+	 * interface.
+	 * 
 	 * @param propertyPath the property path to determine the type for
 	 * @return the type of the property, or {@code null} if not determinable
 	 * @see BeanWrapper#getPropertyType(String)
@@ -392,6 +416,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Get custom editor that has been registered for the given property.
+	 * 
 	 * @param propertyName the property path to look for
 	 * @param requiredType the type to look for
 	 * @return the custom editor, or {@code null} if none specific for this property
@@ -402,9 +427,10 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
-	 * Get custom editor for the given type. If no direct match found,
-	 * try custom editor for superclass (which will in any case be able
-	 * to render a value as String via {@code getAsText}).
+	 * Get custom editor for the given type. If no direct match found, try custom editor
+	 * for superclass (which will in any case be able to render a value as String via
+	 * {@code getAsText}).
+	 * 
 	 * @param requiredType the type to look for
 	 * @return the custom editor, or {@code null} if none found for this type
 	 * @see java.beans.PropertyEditor#getAsText()
@@ -422,7 +448,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 			}
 			if (editor == null) {
 				// Find editor for superclass or interface.
-				for (Iterator<Class<?>> it = this.customEditors.keySet().iterator(); it.hasNext() && editor == null;) {
+				for (Iterator<Class<?>> it = this.customEditors.keySet().iterator(); it.hasNext()
+						&& editor == null;) {
 					Class<?> key = it.next();
 					if (key.isAssignableFrom(requiredType)) {
 						editor = this.customEditors.get(key);
@@ -440,8 +467,9 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
-	 * Guess the property type of the specified property from the registered
-	 * custom editors (provided that they were registered for a specific type).
+	 * Guess the property type of the specified property from the registered custom
+	 * editors (provided that they were registered for a specific type).
+	 * 
 	 * @param propertyName the name of the property
 	 * @return the property type, or {@code null} if not determinable
 	 */
@@ -451,7 +479,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 			if (editorHolder == null) {
 				List<String> strippedPaths = new LinkedList<String>();
 				addStrippedPropertyPaths(strippedPaths, "", propertyName);
-				for (Iterator<String> it = strippedPaths.iterator(); it.hasNext() && editorHolder == null;) {
+				for (Iterator<String> it = strippedPaths.iterator(); it.hasNext()
+						&& editorHolder == null;) {
 					String strippedName = it.next();
 					editorHolder = this.customEditorsForPath.get(strippedName);
 				}
@@ -465,14 +494,17 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	/**
 	 * Copy the custom editors registered in this instance to the given target registry.
+	 * 
 	 * @param target the target registry to copy to
-	 * @param nestedProperty the nested property path of the target registry, if any.
-	 * If this is non-null, only editors registered for a path below this nested property
-	 * will be copied. If this is null, all editors will be copied.
+	 * @param nestedProperty the nested property path of the target registry, if any. If
+	 *        this is non-null, only editors registered for a path below this nested
+	 *        property will be copied. If this is null, all editors will be copied.
 	 */
-	protected void copyCustomEditorsTo(PropertyEditorRegistry target, String nestedProperty) {
-		String actualPropertyName =
-				(nestedProperty != null ? PropertyAccessorUtils.getPropertyName(nestedProperty) : null);
+	protected void copyCustomEditorsTo(PropertyEditorRegistry target,
+			String nestedProperty) {
+		String actualPropertyName = (nestedProperty != null
+				? PropertyAccessorUtils.getPropertyName(nestedProperty)
+				: null);
 		if (this.customEditors != null) {
 			for (Map.Entry<Class<?>, PropertyEditor> entry : this.customEditors.entrySet()) {
 				target.registerCustomEditor(entry.getKey(), entry.getValue());
@@ -483,54 +515,59 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 				String editorPath = entry.getKey();
 				CustomEditorHolder editorHolder = entry.getValue();
 				if (nestedProperty != null) {
-					int pos = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(editorPath);
+					int pos = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(
+							editorPath);
 					if (pos != -1) {
 						String editorNestedProperty = editorPath.substring(0, pos);
 						String editorNestedPath = editorPath.substring(pos + 1);
-						if (editorNestedProperty.equals(nestedProperty) || editorNestedProperty.equals(actualPropertyName)) {
-							target.registerCustomEditor(
-									editorHolder.getRegisteredType(), editorNestedPath, editorHolder.getPropertyEditor());
+						if (editorNestedProperty.equals(nestedProperty)
+								|| editorNestedProperty.equals(actualPropertyName)) {
+							target.registerCustomEditor(editorHolder.getRegisteredType(),
+									editorNestedPath, editorHolder.getPropertyEditor());
 						}
 					}
 				}
 				else {
-					target.registerCustomEditor(
-							editorHolder.getRegisteredType(), editorPath, editorHolder.getPropertyEditor());
+					target.registerCustomEditor(editorHolder.getRegisteredType(),
+							editorPath, editorHolder.getPropertyEditor());
 				}
 			}
 		}
 	}
 
-
 	/**
-	 * Add property paths with all variations of stripped keys and/or indexes.
-	 * Invokes itself recursively with nested paths.
+	 * Add property paths with all variations of stripped keys and/or indexes. Invokes
+	 * itself recursively with nested paths.
+	 * 
 	 * @param strippedPaths the result list to add to
 	 * @param nestedPath the current nested path
 	 * @param propertyPath the property path to check for keys/indexes to strip
 	 */
-	private void addStrippedPropertyPaths(List<String> strippedPaths, String nestedPath, String propertyPath) {
+	private void addStrippedPropertyPaths(List<String> strippedPaths, String nestedPath,
+			String propertyPath) {
 		int startIndex = propertyPath.indexOf(PropertyAccessor.PROPERTY_KEY_PREFIX_CHAR);
 		if (startIndex != -1) {
-			int endIndex = propertyPath.indexOf(PropertyAccessor.PROPERTY_KEY_SUFFIX_CHAR);
+			int endIndex = propertyPath.indexOf(
+					PropertyAccessor.PROPERTY_KEY_SUFFIX_CHAR);
 			if (endIndex != -1) {
 				String prefix = propertyPath.substring(0, startIndex);
 				String key = propertyPath.substring(startIndex, endIndex + 1);
-				String suffix = propertyPath.substring(endIndex + 1, propertyPath.length());
+				String suffix = propertyPath.substring(endIndex + 1,
+						propertyPath.length());
 				// Strip the first key.
 				strippedPaths.add(nestedPath + prefix + suffix);
 				// Search for further keys to strip, with the first key stripped.
 				addStrippedPropertyPaths(strippedPaths, nestedPath + prefix, suffix);
 				// Search for further keys to strip, with the first key not stripped.
-				addStrippedPropertyPaths(strippedPaths, nestedPath + prefix + key, suffix);
+				addStrippedPropertyPaths(strippedPaths, nestedPath + prefix + key,
+						suffix);
 			}
 		}
 	}
 
-
 	/**
-	 * Holder for a registered custom editor with property name.
-	 * Keeps the PropertyEditor itself plus the type it was registered for.
+	 * Holder for a registered custom editor with property name. Keeps the PropertyEditor
+	 * itself plus the type it was registered for.
 	 */
 	private static class CustomEditorHolder {
 
@@ -538,7 +575,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 		private final Class<?> registeredType;
 
-		private CustomEditorHolder(PropertyEditor propertyEditor, Class<?> registeredType) {
+		private CustomEditorHolder(PropertyEditor propertyEditor,
+				Class<?> registeredType) {
 			this.propertyEditor = propertyEditor;
 			this.registeredType = registeredType;
 		}
@@ -558,12 +596,14 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 			// then return PropertyEditor if not registered for Collection or array type.
 			// (If not registered for Collection or array, it is assumed to be intended
 			// for elements.)
-			if (this.registeredType == null ||
-					(requiredType != null &&
-					(ClassUtils.isAssignable(this.registeredType, requiredType) ||
-					ClassUtils.isAssignable(requiredType, this.registeredType))) ||
-					(requiredType == null &&
-					(!Collection.class.isAssignableFrom(this.registeredType) && !this.registeredType.isArray()))) {
+			if (this.registeredType == null
+					|| (requiredType != null
+							&& (ClassUtils.isAssignable(this.registeredType, requiredType)
+									|| ClassUtils.isAssignable(requiredType,
+											this.registeredType)))
+					|| (requiredType == null
+							&& (!Collection.class.isAssignableFrom(this.registeredType)
+									&& !this.registeredType.isArray()))) {
 				return this.propertyEditor;
 			}
 			else {

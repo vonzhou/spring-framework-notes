@@ -29,12 +29,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringValueResolver;
 
 /**
- * Visitor class for traversing {@link BeanDefinition} objects, in particular
- * the property values and constructor argument values contained in them,
- * resolving bean metadata values.
+ * Visitor class for traversing {@link BeanDefinition} objects, in particular the property
+ * values and constructor argument values contained in them, resolving bean metadata
+ * values.
  *
- * <p>Used by {@link PropertyPlaceholderConfigurer} to parse all String values
- * contained in a BeanDefinition, resolving any placeholders found.
+ * <p>
+ * Used by {@link PropertyPlaceholderConfigurer} to parse all String values contained in a
+ * BeanDefinition, resolving any placeholders found.
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
@@ -48,10 +49,10 @@ public class BeanDefinitionVisitor {
 
 	private StringValueResolver valueResolver;
 
-
 	/**
-	 * Create a new BeanDefinitionVisitor, applying the specified
-	 * value resolver to all bean metadata values.
+	 * Create a new BeanDefinitionVisitor, applying the specified value resolver to all
+	 * bean metadata values.
+	 * 
 	 * @param valueResolver the StringValueResolver to apply
 	 */
 	public BeanDefinitionVisitor(StringValueResolver valueResolver) {
@@ -60,16 +61,16 @@ public class BeanDefinitionVisitor {
 	}
 
 	/**
-	 * Create a new BeanDefinitionVisitor for subclassing.
-	 * Subclasses need to override the {@link #resolveStringValue} method.
+	 * Create a new BeanDefinitionVisitor for subclassing. Subclasses need to override the
+	 * {@link #resolveStringValue} method.
 	 */
 	protected BeanDefinitionVisitor() {
 	}
 
-
 	/**
-	 * Traverse the given BeanDefinition object and the MutablePropertyValues
-	 * and ConstructorArgumentValues contained in them.
+	 * Traverse the given BeanDefinition object and the MutablePropertyValues and
+	 * ConstructorArgumentValues contained in them.
+	 * 
 	 * @param beanDefinition the BeanDefinition object to traverse
 	 * @see #resolveStringValue(String)
 	 */
@@ -145,7 +146,8 @@ public class BeanDefinitionVisitor {
 		}
 	}
 
-	protected void visitIndexedArgumentValues(Map<Integer, ConstructorArgumentValues.ValueHolder> ias) {
+	protected void visitIndexedArgumentValues(
+			Map<Integer, ConstructorArgumentValues.ValueHolder> ias) {
 		for (ConstructorArgumentValues.ValueHolder valueHolder : ias.values()) {
 			Object newVal = resolveValue(valueHolder.getValue());
 			if (!ObjectUtils.nullSafeEquals(newVal, valueHolder.getValue())) {
@@ -154,7 +156,8 @@ public class BeanDefinitionVisitor {
 		}
 	}
 
-	protected void visitGenericArgumentValues(List<ConstructorArgumentValues.ValueHolder> gas) {
+	protected void visitGenericArgumentValues(
+			List<ConstructorArgumentValues.ValueHolder> gas) {
 		for (ConstructorArgumentValues.ValueHolder valueHolder : gas) {
 			Object newVal = resolveValue(valueHolder.getValue());
 			if (!ObjectUtils.nullSafeEquals(newVal, valueHolder.getValue())) {
@@ -221,7 +224,7 @@ public class BeanDefinitionVisitor {
 		}
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void visitList(List listVal) {
 		for (int i = 0; i < listVal.size(); i++) {
 			Object elem = listVal.get(i);
@@ -232,7 +235,7 @@ public class BeanDefinitionVisitor {
 		}
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void visitSet(Set setVal) {
 		Set newContent = new LinkedHashSet();
 		boolean entriesModified = false;
@@ -241,7 +244,8 @@ public class BeanDefinitionVisitor {
 			Object newVal = resolveValue(elem);
 			int newValHash = (newVal != null ? newVal.hashCode() : 0);
 			newContent.add(newVal);
-			entriesModified = entriesModified || (newVal != elem || newValHash != elemHash);
+			entriesModified = entriesModified
+					|| (newVal != elem || newValHash != elemHash);
 		}
 		if (entriesModified) {
 			setVal.clear();
@@ -249,7 +253,7 @@ public class BeanDefinitionVisitor {
 		}
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void visitMap(Map<?, ?> mapVal) {
 		Map newContent = new LinkedHashMap();
 		boolean entriesModified = false;
@@ -261,7 +265,8 @@ public class BeanDefinitionVisitor {
 			Object val = entry.getValue();
 			Object newVal = resolveValue(val);
 			newContent.put(newKey, newVal);
-			entriesModified = entriesModified || (newVal != val || newKey != key || newKeyHash != keyHash);
+			entriesModified = entriesModified
+					|| (newVal != val || newKey != key || newKeyHash != keyHash);
 		}
 		if (entriesModified) {
 			mapVal.clear();
@@ -271,13 +276,15 @@ public class BeanDefinitionVisitor {
 
 	/**
 	 * Resolve the given String value, for example parsing placeholders.
+	 * 
 	 * @param strVal the original String value
 	 * @return the resolved String value
 	 */
 	protected String resolveStringValue(String strVal) {
 		if (this.valueResolver == null) {
-			throw new IllegalStateException("No StringValueResolver specified - pass a resolver " +
-					"object into the constructor or override the 'resolveStringValue' method");
+			throw new IllegalStateException(
+					"No StringValueResolver specified - pass a resolver "
+							+ "object into the constructor or override the 'resolveStringValue' method");
 		}
 		String resolvedValue = this.valueResolver.resolveStringValue(strVal);
 		// Return original String if not modified.

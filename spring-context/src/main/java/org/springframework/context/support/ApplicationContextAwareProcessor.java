@@ -34,16 +34,18 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.util.StringValueResolver;
 
 /**
- * {@link org.springframework.beans.factory.config.BeanPostProcessor}
- * implementation that passes the ApplicationContext to beans that
- * implement the {@link EnvironmentAware}, {@link EmbeddedValueResolverAware},
- * {@link ResourceLoaderAware}, {@link ApplicationEventPublisherAware},
- * {@link MessageSourceAware} and/or {@link ApplicationContextAware} interfaces.
+ * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation that
+ * passes the ApplicationContext to beans that implement the {@link EnvironmentAware},
+ * {@link EmbeddedValueResolverAware}, {@link ResourceLoaderAware},
+ * {@link ApplicationEventPublisherAware}, {@link MessageSourceAware} and/or
+ * {@link ApplicationContextAware} interfaces.
  *
- * <p>Implemented interfaces are satisfied in order of their mention above.
+ * <p>
+ * Implemented interfaces are satisfied in order of their mention above.
  *
- * <p>Application contexts will automatically register this with their
- * underlying bean factory. Applications do not use this directly.
+ * <p>
+ * Application contexts will automatically register this with their underlying bean
+ * factory. Applications do not use this directly.
  *
  * @author Juergen Hoeller
  * @author Costin Leau
@@ -63,29 +65,33 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 
 	private final StringValueResolver embeddedValueResolver;
 
-
 	/**
 	 * Create a new ApplicationContextAwareProcessor for the given context.
 	 */
-	public ApplicationContextAwareProcessor(ConfigurableApplicationContext applicationContext) {
+	public ApplicationContextAwareProcessor(
+			ConfigurableApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
-		this.embeddedValueResolver = new EmbeddedValueResolver(applicationContext.getBeanFactory());
+		this.embeddedValueResolver = new EmbeddedValueResolver(
+				applicationContext.getBeanFactory());
 	}
 
-
 	@Override
-	public Object postProcessBeforeInitialization(final Object bean, String beanName) throws BeansException {
+	public Object postProcessBeforeInitialization(final Object bean, String beanName)
+			throws BeansException {
 		AccessControlContext acc = null;
 
-		if (System.getSecurityManager() != null &&
-				(bean instanceof EnvironmentAware || bean instanceof EmbeddedValueResolverAware ||
-						bean instanceof ResourceLoaderAware || bean instanceof ApplicationEventPublisherAware ||
-						bean instanceof MessageSourceAware || bean instanceof ApplicationContextAware)) {
+		if (System.getSecurityManager() != null && (bean instanceof EnvironmentAware
+				|| bean instanceof EmbeddedValueResolverAware
+				|| bean instanceof ResourceLoaderAware
+				|| bean instanceof ApplicationEventPublisherAware
+				|| bean instanceof MessageSourceAware
+				|| bean instanceof ApplicationContextAware)) {
 			acc = this.applicationContext.getBeanFactory().getAccessControlContext();
 		}
 
 		if (acc != null) {
 			AccessController.doPrivileged(new PrivilegedAction<Object>() {
+
 				@Override
 				public Object run() {
 					invokeAwareInterfaces(bean);
@@ -100,25 +106,30 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
+	// 设置这些 Aware 的资源到我们的 bean 中
 	private void invokeAwareInterfaces(Object bean) {
 		if (bean instanceof Aware) {
 			if (bean instanceof EnvironmentAware) {
-				((EnvironmentAware) bean).setEnvironment(this.applicationContext.getEnvironment());
+				((EnvironmentAware) bean).setEnvironment(
+						this.applicationContext.getEnvironment());
 			}
 			if (bean instanceof EmbeddedValueResolverAware) {
-				((EmbeddedValueResolverAware) bean).setEmbeddedValueResolver(this.embeddedValueResolver);
+				((EmbeddedValueResolverAware) bean).setEmbeddedValueResolver(
+						this.embeddedValueResolver);
 			}
 			if (bean instanceof ResourceLoaderAware) {
 				((ResourceLoaderAware) bean).setResourceLoader(this.applicationContext);
 			}
 			if (bean instanceof ApplicationEventPublisherAware) {
-				((ApplicationEventPublisherAware) bean).setApplicationEventPublisher(this.applicationContext);
+				((ApplicationEventPublisherAware) bean).setApplicationEventPublisher(
+						this.applicationContext);
 			}
 			if (bean instanceof MessageSourceAware) {
 				((MessageSourceAware) bean).setMessageSource(this.applicationContext);
 			}
-			if (bean instanceof ApplicationContextAware) {
-				((ApplicationContextAware) bean).setApplicationContext(this.applicationContext);
+			if (bean instanceof ApplicationContextAware) { // 常用
+				((ApplicationContextAware) bean).setApplicationContext(
+						this.applicationContext);
 			}
 		}
 	}

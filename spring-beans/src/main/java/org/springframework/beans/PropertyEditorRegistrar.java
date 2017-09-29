@@ -17,13 +17,17 @@
 package org.springframework.beans;
 
 /**
- * Interface for strategies that register custom
- * {@link java.beans.PropertyEditor property editors} with a
- * {@link org.springframework.beans.PropertyEditorRegistry property editor registry}.
+ * 实现 registerCustomEditors 方法，然后通过 registry.registerCustomEditor 方法来注册特定的属性编辑器。 Registrar
+ * => Registry => (Class, PropertyEditor)
+ * <p>
+ * Interface for strategies that register custom {@link java.beans.PropertyEditor property
+ * editors} with a {@link org.springframework.beans.PropertyEditorRegistry property editor
+ * registry}.
  *
- * <p>This is particularly useful when you need to use the same set of
- * property editors in several different situations: write a corresponding
- * registrar and reuse that in each case.
+ * <p>
+ * This is particularly useful when you need to use the same set of property editors in
+ * several different situations: write a corresponding registrar and reuse that in each
+ * case.
  *
  * @author Juergen Hoeller
  * @since 1.2.6
@@ -33,15 +37,18 @@ package org.springframework.beans;
 public interface PropertyEditorRegistrar {
 
 	/**
-	 * Register custom {@link java.beans.PropertyEditor PropertyEditors} with
-	 * the given {@code PropertyEditorRegistry}.
-	 * <p>The passed-in registry will usually be a {@link BeanWrapper} or a
+	 * Register custom {@link java.beans.PropertyEditor PropertyEditors} with the given
+	 * {@code PropertyEditorRegistry}.
+	 * <p>
+	 * The passed-in registry will usually be a {@link BeanWrapper} or a
 	 * {@link org.springframework.validation.DataBinder DataBinder}.
-	 * <p>It is expected that implementations will create brand new
-	 * {@code PropertyEditors} instances for each invocation of this
-	 * method (since {@code PropertyEditors} are not threadsafe).
-	 * @param registry the {@code PropertyEditorRegistry} to register the
-	 * custom {@code PropertyEditors} with
+	 * <p>
+	 * It is expected that implementations will create brand new {@code PropertyEditors}
+	 * instances for each invocation of this method (since {@code PropertyEditors} are not
+	 * threadsafe).
+	 * 
+	 * @param registry the {@code PropertyEditorRegistry} to register the custom
+	 *        {@code PropertyEditors} with
 	 */
 	void registerCustomEditors(PropertyEditorRegistry registry);
 

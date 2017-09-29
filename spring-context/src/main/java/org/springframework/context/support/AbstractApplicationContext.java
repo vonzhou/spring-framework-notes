@@ -546,6 +546,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// 留给子类扩展
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
@@ -663,14 +664,21 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
 		// Tell the internal bean factory to use the context's class loader etc.
 		beanFactory.setBeanClassLoader(getClassLoader());
+
+		// bean definition 中支持 SPEL，bean 初始化过程，属性填充的时候，会
+		// AbstractAutowireCapableBeanFactory.applyBeanPropertyValues(Object, String)
 		beanFactory.setBeanExpressionResolver(
 				new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+
+		// 注册一些常用资源类型的 PropertyEditor
 		beanFactory.addPropertyEditorRegistrar(
 				new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
+		// bean 初始化方法前后会调用 BeanPostProcessor 的前，后处理器方法
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
+		// 有些依赖需要忽略，不是普通的 bean
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);

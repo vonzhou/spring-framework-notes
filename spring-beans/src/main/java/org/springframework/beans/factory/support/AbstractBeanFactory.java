@@ -1225,6 +1225,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport
 	 */
 	protected void initBeanWrapper(BeanWrapper bw) {
 		bw.setConversionService(getConversionService());
+		// 注册自定义 PropertyEditor 的动作在这里
 		registerCustomEditors(bw);
 	}
 
