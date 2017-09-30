@@ -1161,6 +1161,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			Object result = getAutowireCandidateResolver().getLazyResolutionProxyIfNecessary(
 					descriptor, requestingBeanName);
 			if (result == null) {
+				// 这里
 				result = doResolveDependency(descriptor, requestingBeanName,
 						autowiredBeanNames, typeConverter);
 			}
@@ -1245,6 +1246,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			if (autowiredBeanNames != null) {
 				autowiredBeanNames.add(autowiredBeanName);
 			}
+			// 这里
 			return (instanceCandidate instanceof Class
 					? descriptor.resolveCandidate(autowiredBeanName, type, this)
 					: instanceCandidate);

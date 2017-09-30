@@ -510,7 +510,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					"BeanPostProcessor before instantiation of bean failed", ex);
 		}
 
-		Object beanInstance = doCreateBean(beanName, mbdToUse, args);
+		Object beanInstance = doCreateBean(beanName, mbdToUse, args);// 核心
 		if (logger.isDebugEnabled()) {
 			logger.debug("Finished creating instance of bean '" + beanName + "'");
 		}
@@ -591,7 +591,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
-			// 填充 bean 的各个属性
+			// 填充 bean 的各个属性，包括依赖注入
 			populateBean(beanName, mbd, instanceWrapper);
 			if (exposedObject != null) {
 				// 调用初始化方法，如果是 InitializingBean 则先调用 afterPropertiesSet 然后调用自定义的
@@ -1399,6 +1399,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				for (BeanPostProcessor bp : getBeanPostProcessors()) {
 					if (bp instanceof InstantiationAwareBeanPostProcessor) {
 						InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+						// AutowiredAnnotationBeanPostProcessor 填充 Autowired 注解需要的属性
 						pvs = ibp.postProcessPropertyValues(pvs, filteredPds,
 								bw.getWrappedInstance(), beanName);
 						if (pvs == null) {
