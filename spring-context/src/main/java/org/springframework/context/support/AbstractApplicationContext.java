@@ -554,6 +554,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				// 注册 BeanPostProcessor，实现了 BeanPostProcessor 的自动发现
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
@@ -770,6 +771,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void initMessageSource() {
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+		// bean 的名称是 messageSource
 		if (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) {
 			this.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME,
 					MessageSource.class);
@@ -789,6 +791,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			}
 		}
 		else {
+			// 如果用户没有配置 messageSource，那么创建一个 DelegatingMessageSource 来承载 getMessage 调用
 			// Use empty MessageSource to be able to accept getMessage calls.
 			DelegatingMessageSource dms = new DelegatingMessageSource();
 			dms.setParentMessageSource(getInternalParentMessageSource());
@@ -803,8 +806,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
-	 * Initialize the ApplicationEventMulticaster. Uses SimpleApplicationEventMulticaster
-	 * if none defined in the context.
+	 * 初始化 ApplicationEventMulticaster. 如果上下文没有配置就使用 SimpleApplicationEventMulticaster。
 	 * 
 	 * @see org.springframework.context.event.SimpleApplicationEventMulticaster
 	 */
@@ -881,12 +883,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void registerListeners() {
 		// Register statically specified listeners first.
+		// 硬编码方式注册的 ApplicationListener
 		for (ApplicationListener<?> listener : getApplicationListeners()) {
 			getApplicationEventMulticaster().addApplicationListener(listener);
 		}
 
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let post-processors apply to them!
+		// 配置文件中的 ApplicationListener，探测
 		String[] listenerBeanNames = getBeanNamesForType(ApplicationListener.class, true,
 				false);
 		for (String listenerBeanName : listenerBeanNames) {

@@ -25,6 +25,12 @@ Ctrl + Shift + F : 格式化代码
 
 Ctrl + Shift + R : 全局搜索，类似intellij的 double shift
 
+Ctrl+ Alt + Down : 复制当前行到下一行
+
+Ctrl + Alt + Up : 复制当前行到上一行
+
+Alt + Up/Down ： 上/下移行
+
 
 
 
