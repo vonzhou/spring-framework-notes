@@ -31,7 +31,7 @@ import org.springframework.http.HttpMethod;
 public abstract class CorsUtils {
 
 	/**
-	 * Returns {@code true} if the request is a valid CORS one.
+	 * Returns {@code true} if the request is a valid CORS（跨域资源共享） one.
 	 */
 	public static boolean isCorsRequest(HttpServletRequest request) {
 		return (request.getHeader(HttpHeaders.ORIGIN) != null);
@@ -41,8 +41,8 @@ public abstract class CorsUtils {
 	 * Returns {@code true} if the request is a valid CORS pre-flight one.
 	 */
 	public static boolean isPreFlightRequest(HttpServletRequest request) {
-		return (isCorsRequest(request) && HttpMethod.OPTIONS.matches(request.getMethod()) &&
-				request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD) != null);
+		return (isCorsRequest(request) && HttpMethod.OPTIONS.matches(request.getMethod())
+				&& request.getHeader(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD) != null);
 	}
 
 }
