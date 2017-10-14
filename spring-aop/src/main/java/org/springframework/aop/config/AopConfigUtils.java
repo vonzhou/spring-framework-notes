@@ -31,11 +31,11 @@ import org.springframework.util.Assert;
 /**
  * Utility class for handling registration of AOP auto-proxy creators.
  *
- * <p>Only a single auto-proxy creator can be registered yet multiple concrete
- * implementations are available. Therefore this class wraps a simple escalation
- * protocol, allowing classes to request a particular auto-proxy creator and know
- * that class, {@code or a subclass thereof}, will eventually be resident
- * in the application context.
+ * <p>
+ * Only a single auto-proxy creator can be registered yet multiple concrete
+ * implementations are available. Therefore this class wraps a simple escalation protocol,
+ * allowing classes to request a particular auto-proxy creator and know that class,
+ * {@code or a subclass thereof}, will eventually be resident in the application context.
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -48,8 +48,7 @@ public abstract class AopConfigUtils {
 	/**
 	 * The bean name of the internally managed auto-proxy creator.
 	 */
-	public static final String AUTO_PROXY_CREATOR_BEAN_NAME =
-			"org.springframework.aop.config.internalAutoProxyCreator";
+	public static final String AUTO_PROXY_CREATOR_BEAN_NAME = "org.springframework.aop.config.internalAutoProxyCreator";
 
 	/**
 	 * Stores the auto proxy creator classes in escalation order.
@@ -65,59 +64,77 @@ public abstract class AopConfigUtils {
 		APC_PRIORITY_LIST.add(AnnotationAwareAspectJAutoProxyCreator.class);
 	}
 
-
-	public static BeanDefinition registerAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry) {
+	public static BeanDefinition registerAutoProxyCreatorIfNecessary(
+			BeanDefinitionRegistry registry) {
 		return registerAutoProxyCreatorIfNecessary(registry, null);
 	}
 
-	public static BeanDefinition registerAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
-		return registerOrEscalateApcAsRequired(InfrastructureAdvisorAutoProxyCreator.class, registry, source);
+	public static BeanDefinition registerAutoProxyCreatorIfNecessary(
+			BeanDefinitionRegistry registry, Object source) {
+		return registerOrEscalateApcAsRequired(
+				InfrastructureAdvisorAutoProxyCreator.class, registry, source);
 	}
 
-	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry) {
+	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(
+			BeanDefinitionRegistry registry) {
 		return registerAspectJAutoProxyCreatorIfNecessary(registry, null);
 	}
 
-	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
-		return registerOrEscalateApcAsRequired(AspectJAwareAdvisorAutoProxyCreator.class, registry, source);
+	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(
+			BeanDefinitionRegistry registry, Object source) {
+		return registerOrEscalateApcAsRequired(AspectJAwareAdvisorAutoProxyCreator.class,
+				registry, source);
 	}
 
-	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry) {
+	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(
+			BeanDefinitionRegistry registry) {
 		return registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry, null);
 	}
 
-	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(BeanDefinitionRegistry registry, Object source) {
-		return registerOrEscalateApcAsRequired(AnnotationAwareAspectJAutoProxyCreator.class, registry, source);
+	public static BeanDefinition registerAspectJAnnotationAutoProxyCreatorIfNecessary(
+			BeanDefinitionRegistry registry, Object source) {
+		return registerOrEscalateApcAsRequired(
+				AnnotationAwareAspectJAutoProxyCreator.class, registry, source);
 	}
 
-	public static void forceAutoProxyCreatorToUseClassProxying(BeanDefinitionRegistry registry) {
+	public static void forceAutoProxyCreatorToUseClassProxying(
+			BeanDefinitionRegistry registry) {
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
-			BeanDefinition definition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			BeanDefinition definition = registry.getBeanDefinition(
+					AUTO_PROXY_CREATOR_BEAN_NAME);
 			definition.getPropertyValues().add("proxyTargetClass", Boolean.TRUE);
 		}
 	}
 
-	public static void forceAutoProxyCreatorToExposeProxy(BeanDefinitionRegistry registry) {
+	public static void forceAutoProxyCreatorToExposeProxy(
+			BeanDefinitionRegistry registry) {
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
-			BeanDefinition definition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			BeanDefinition definition = registry.getBeanDefinition(
+					AUTO_PROXY_CREATOR_BEAN_NAME);
 			definition.getPropertyValues().add("exposeProxy", Boolean.TRUE);
 		}
 	}
 
-
-	private static BeanDefinition registerOrEscalateApcAsRequired(Class<?> cls, BeanDefinitionRegistry registry, Object source) {
+	private static BeanDefinition registerOrEscalateApcAsRequired(Class<?> cls,
+			BeanDefinitionRegistry registry, Object source) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
+		// 如果已经存在则由优先级决定
 		if (registry.containsBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME)) {
-			BeanDefinition apcDefinition = registry.getBeanDefinition(AUTO_PROXY_CREATOR_BEAN_NAME);
+			BeanDefinition apcDefinition = registry.getBeanDefinition(
+					AUTO_PROXY_CREATOR_BEAN_NAME);
 			if (!cls.getName().equals(apcDefinition.getBeanClassName())) {
-				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
+				int currentPriority = findPriorityForClass(
+						apcDefinition.getBeanClassName());
 				int requiredPriority = findPriorityForClass(cls);
 				if (currentPriority < requiredPriority) {
+					// 改变 bean definition 的 class name
 					apcDefinition.setBeanClassName(cls.getName());
 				}
 			}
+			// 无需调整
 			return null;
 		}
+		// 不存在，则创建并注册
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(cls);
 		beanDefinition.setSource(source);
 		beanDefinition.getPropertyValues().add("order", Ordered.HIGHEST_PRECEDENCE);

@@ -30,8 +30,8 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.Assert;
 
 /**
- * Helper for retrieving @AspectJ beans from a BeanFactory and building
- * Spring Advisors based on them, for use with auto-proxying.
+ * Helper for retrieving @AspectJ beans from a BeanFactory and building Spring Advisors
+ * based on them, for use with auto-proxying.
  *
  * @author Juergen Hoeller
  * @since 2.0.2
@@ -47,12 +47,11 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 
 	private final Map<String, List<Advisor>> advisorsCache = new ConcurrentHashMap<String, List<Advisor>>();
 
-	private final Map<String, MetadataAwareAspectInstanceFactory> aspectFactoryCache =
-			new ConcurrentHashMap<String, MetadataAwareAspectInstanceFactory>();
-
+	private final Map<String, MetadataAwareAspectInstanceFactory> aspectFactoryCache = new ConcurrentHashMap<String, MetadataAwareAspectInstanceFactory>();
 
 	/**
 	 * Create a new BeanFactoryAspectJAdvisorsBuilder for the given BeanFactory.
+	 * 
 	 * @param beanFactory the ListableBeanFactory to scan
 	 */
 	public BeanFactoryAspectJAdvisorsBuilder(ListableBeanFactory beanFactory) {
@@ -61,21 +60,24 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 
 	/**
 	 * Create a new BeanFactoryAspectJAdvisorsBuilder for the given BeanFactory.
+	 * 
 	 * @param beanFactory the ListableBeanFactory to scan
 	 * @param advisorFactory the AspectJAdvisorFactory to build each Advisor with
 	 */
-	public BeanFactoryAspectJAdvisorsBuilder(ListableBeanFactory beanFactory, AspectJAdvisorFactory advisorFactory) {
+	public BeanFactoryAspectJAdvisorsBuilder(ListableBeanFactory beanFactory,
+			AspectJAdvisorFactory advisorFactory) {
 		Assert.notNull(beanFactory, "ListableBeanFactory must not be null");
 		Assert.notNull(advisorFactory, "AspectJAdvisorFactory must not be null");
 		this.beanFactory = beanFactory;
 		this.advisorFactory = advisorFactory;
 	}
 
-
 	/**
-	 * Look for AspectJ-annotated aspect beans in the current bean factory,
-	 * and return to a list of Spring AOP Advisors representing them.
-	 * <p>Creates a Spring Advisor for each AspectJ advice method.
+	 * Look for AspectJ-annotated aspect beans in the current bean factory, and return to
+	 * a list of Spring AOP Advisors representing them.
+	 * <p>
+	 * Creates a Spring Advisor for each AspectJ advice method.
+	 * 
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
 	 * @see #isEligibleBean
 	 */
@@ -85,28 +87,32 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 		if (aspectNames == null) {
 			synchronized (this) {
 				aspectNames = this.aspectBeanNames;
-				if (aspectNames == null) {
+				if (aspectNames == null) { // 双重检查
 					List<Advisor> advisors = new LinkedList<Advisor>();
 					aspectNames = new LinkedList<String>();
+					// 获取所有的 bean name
 					String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 							this.beanFactory, Object.class, true, false);
 					for (String beanName : beanNames) {
-						if (!isEligibleBean(beanName)) {
+						if (!isEligibleBean(beanName)) { // 略过不合适的 bean
 							continue;
 						}
-						// We must be careful not to instantiate beans eagerly as in this case they
-						// would be cached by the Spring container but would not have been weaved.
+						// We must be careful not to instantiate beans eagerly as in this
+						// case they would be cached by the Spring container but would not
+						// have been weaved.
 						Class<?> beanType = this.beanFactory.getType(beanName);
 						if (beanType == null) {
 							continue;
 						}
+						// 如果存在 AspectJ 注解
 						if (this.advisorFactory.isAspect(beanType)) {
 							aspectNames.add(beanName);
 							AspectMetadata amd = new AspectMetadata(beanType, beanName);
 							if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
-								MetadataAwareAspectInstanceFactory factory =
-										new BeanFactoryAspectInstanceFactory(this.beanFactory, beanName);
-								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);
+								MetadataAwareAspectInstanceFactory factory = new BeanFactoryAspectInstanceFactory(
+										this.beanFactory, beanName);
+								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(
+										factory);
 								if (this.beanFactory.isSingleton(beanName)) {
 									this.advisorsCache.put(beanName, classAdvisors);
 								}
@@ -118,11 +124,12 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 							else {
 								// Per target or per this.
 								if (this.beanFactory.isSingleton(beanName)) {
-									throw new IllegalArgumentException("Bean with name '" + beanName +
-											"' is a singleton, but aspect instantiation model is not singleton");
+									throw new IllegalArgumentException("Bean with name '"
+											+ beanName
+											+ "' is a singleton, but aspect instantiation model is not singleton");
 								}
-								MetadataAwareAspectInstanceFactory factory =
-										new PrototypeAspectInstanceFactory(this.beanFactory, beanName);
+								MetadataAwareAspectInstanceFactory factory = new PrototypeAspectInstanceFactory(
+										this.beanFactory, beanName);
 								this.aspectFactoryCache.put(beanName, factory);
 								advisors.addAll(this.advisorFactory.getAdvisors(factory));
 							}
@@ -144,7 +151,8 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 				advisors.addAll(cachedAdvisors);
 			}
 			else {
-				MetadataAwareAspectInstanceFactory factory = this.aspectFactoryCache.get(aspectName);
+				MetadataAwareAspectInstanceFactory factory = this.aspectFactoryCache.get(
+						aspectName);
 				advisors.addAll(this.advisorFactory.getAdvisors(factory));
 			}
 		}
@@ -153,6 +161,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 
 	/**
 	 * Return whether the aspect bean with the given name is eligible.
+	 * 
 	 * @param beanName the name of the aspect bean
 	 * @return whether the bean is eligible
 	 */
