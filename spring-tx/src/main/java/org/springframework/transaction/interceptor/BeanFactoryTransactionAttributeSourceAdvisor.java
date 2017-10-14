@@ -21,8 +21,8 @@ import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
 
 /**
- * Advisor driven by a {@link TransactionAttributeSource}, used to include
- * a transaction advice bean for methods that are transactional.
+ * 定义了一个 Advisor，用于支持事务。 Advisor driven by a {@link TransactionAttributeSource}, used to
+ * include a transaction advice bean for methods that are transactional.
  *
  * @author Juergen Hoeller
  * @since 2.5.5
@@ -31,31 +31,34 @@ import org.springframework.aop.support.AbstractBeanFactoryPointcutAdvisor;
  * @see TransactionAttributeSourceAdvisor
  */
 @SuppressWarnings("serial")
-public class BeanFactoryTransactionAttributeSourceAdvisor extends AbstractBeanFactoryPointcutAdvisor {
+public class BeanFactoryTransactionAttributeSourceAdvisor
+		extends AbstractBeanFactoryPointcutAdvisor {
 
 	private TransactionAttributeSource transactionAttributeSource;
 
 	private final TransactionAttributeSourcePointcut pointcut = new TransactionAttributeSourcePointcut() {
+
 		@Override
 		protected TransactionAttributeSource getTransactionAttributeSource() {
 			return transactionAttributeSource;
 		}
 	};
 
-
 	/**
-	 * Set the transaction attribute source which is used to find transaction
-	 * attributes. This should usually be identical to the source reference
-	 * set on the transaction interceptor itself.
+	 * Set the transaction attribute source which is used to find transaction attributes.
+	 * This should usually be identical to the source reference set on the transaction
+	 * interceptor itself.
+	 * 
 	 * @see TransactionInterceptor#setTransactionAttributeSource
 	 */
-	public void setTransactionAttributeSource(TransactionAttributeSource transactionAttributeSource) {
+	public void setTransactionAttributeSource(
+			TransactionAttributeSource transactionAttributeSource) {
 		this.transactionAttributeSource = transactionAttributeSource;
 	}
 
 	/**
-	 * Set the {@link ClassFilter} to use for this pointcut.
-	 * Default is {@link ClassFilter#TRUE}.
+	 * Set the {@link ClassFilter} to use for this pointcut. Default is
+	 * {@link ClassFilter#TRUE}.
 	 */
 	public void setClassFilter(ClassFilter classFilter) {
 		this.pointcut.setClassFilter(classFilter);
