@@ -27,8 +27,8 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 
 /**
- * Default implementation of the {@link AdvisorAdapterRegistry} interface.
- * Supports {@link org.aopalliance.intercept.MethodInterceptor},
+ * Default implementation of the {@link AdvisorAdapterRegistry} interface. Supports
+ * {@link org.aopalliance.intercept.MethodInterceptor},
  * {@link org.springframework.aop.MethodBeforeAdvice},
  * {@link org.springframework.aop.AfterReturningAdvice},
  * {@link org.springframework.aop.ThrowsAdvice}.
@@ -38,10 +38,10 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
  * @author Juergen Hoeller
  */
 @SuppressWarnings("serial")
-public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Serializable {
+public class DefaultAdvisorAdapterRegistry
+		implements AdvisorAdapterRegistry, Serializable {
 
 	private final List<AdvisorAdapter> adapters = new ArrayList<AdvisorAdapter>(3);
-
 
 	/**
 	 * Create a new DefaultAdvisorAdapterRegistry, registering well-known adapters.
@@ -51,7 +51,6 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 		registerAdvisorAdapter(new AfterReturningAdviceAdapter());
 		registerAdvisorAdapter(new ThrowsAdviceAdapter());
 	}
-
 
 	@Override
 	public Advisor wrap(Object adviceObject) throws UnknownAdviceTypeException {
@@ -66,6 +65,8 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 			// So well-known it doesn't even need an adapter.
 			return new DefaultPointcutAdvisor(advice);
 		}
+
+		// 如果存在 Advisor 适配器，也要尝试将转化
 		for (AdvisorAdapter adapter : this.adapters) {
 			// Check that it is supported.
 			if (adapter.supportsAdvice(advice)) {
@@ -76,7 +77,8 @@ public class DefaultAdvisorAdapterRegistry implements AdvisorAdapterRegistry, Se
 	}
 
 	@Override
-	public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
+	public MethodInterceptor[] getInterceptors(Advisor advisor)
+			throws UnknownAdviceTypeException {
 		List<MethodInterceptor> interceptors = new ArrayList<MethodInterceptor>(3);
 		Advice advice = advisor.getAdvice();
 		if (advice instanceof MethodInterceptor) {

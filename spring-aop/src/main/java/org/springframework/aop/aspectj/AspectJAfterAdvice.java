@@ -34,13 +34,13 @@ import org.springframework.aop.AfterAdvice;
 public class AspectJAfterAdvice extends AbstractAspectJAdvice
 		implements MethodInterceptor, AfterAdvice, Serializable {
 
-	public AspectJAfterAdvice(
-			Method aspectJBeforeAdviceMethod, AspectJExpressionPointcut pointcut, AspectInstanceFactory aif) {
+	public AspectJAfterAdvice(Method aspectJBeforeAdviceMethod,
+			AspectJExpressionPointcut pointcut, AspectInstanceFactory aif) {
 
 		super(aspectJBeforeAdviceMethod, pointcut, aif);
 	}
 
-
+	// 看了代码很明了
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		try {

@@ -25,9 +25,9 @@ import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.util.Assert;
 
 /**
- * Interceptor to wrap am {@link org.springframework.aop.MethodBeforeAdvice}.
- * Used internally by the AOP framework; application developers should not need
- * to use this class directly.
+ * Interceptor to wrap am {@link org.springframework.aop.MethodBeforeAdvice}. Used
+ * internally by the AOP framework; application developers should not need to use this
+ * class directly.
  *
  * @author Rod Johnson
  */
@@ -36,9 +36,9 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 
 	private MethodBeforeAdvice advice;
 
-
 	/**
 	 * Create a new MethodBeforeAdviceInterceptor for the given advice.
+	 * 
 	 * @param advice the MethodBeforeAdvice to wrap
 	 */
 	public MethodBeforeAdviceInterceptor(MethodBeforeAdvice advice) {
@@ -48,7 +48,7 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
-		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis() );
+		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis());
 		return mi.proceed();
 	}
 

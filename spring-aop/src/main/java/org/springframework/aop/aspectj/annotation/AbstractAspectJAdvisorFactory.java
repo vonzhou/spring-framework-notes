@@ -44,11 +44,12 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Abstract base class for factories that can create Spring AOP Advisors
- * given AspectJ classes from classes honoring the AspectJ 5 annotation syntax.
+ * Abstract base class for factories that can create Spring AOP Advisors given AspectJ
+ * classes from classes honoring the AspectJ 5 annotation syntax.
  *
- * <p>This class handles annotation parsing and validation functionality.
- * It does not actually generate Spring AOP Advisors, which is deferred to subclasses.
+ * <p>
+ * This class handles annotation parsing and validation functionality. It does not
+ * actually generate Spring AOP Advisors, which is deferred to subclasses.
  *
  * @author Rod Johnson
  * @author Adrian Colyer
@@ -59,18 +60,17 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 
 	private static final String AJC_MAGIC = "ajc$";
 
-
 	/** Logger available to subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	protected final ParameterNameDiscoverer parameterNameDiscoverer = new AspectJAnnotationParameterNameDiscoverer();
 
-
 	/**
-	 * We consider something to be an AspectJ aspect suitable for use by the Spring AOP system
-	 * if it has the @Aspect annotation, and was not compiled by ajc. The reason for this latter test
-	 * is that aspects written in the code-style (AspectJ language) also have the annotation present
-	 * when compiled by ajc with the -1.5 flag, yet they cannot be consumed by Spring AOP.
+	 * We consider something to be an AspectJ aspect suitable for use by the Spring AOP
+	 * system if it has the @Aspect annotation, and was not compiled by ajc. The reason
+	 * for this latter test is that aspects written in the code-style (AspectJ language)
+	 * also have the annotation present when compiled by ajc with the -1.5 flag, yet they
+	 * cannot be consumed by Spring AOP.
 	 */
 	@Override
 	public boolean isAspect(Class<?> clazz) {
@@ -82,12 +82,14 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	}
 
 	/**
-	 * We need to detect this as "code-style" AspectJ aspects should not be
-	 * interpreted by Spring AOP.
+	 * We need to detect this as "code-style" AspectJ aspects should not be interpreted by
+	 * Spring AOP.
 	 */
 	private boolean compiledByAjc(Class<?> clazz) {
-		// The AJTypeSystem goes to great lengths to provide a uniform appearance between code-style and
-		// annotation-style aspects. Therefore there is no 'clean' way to tell them apart. Here we rely on
+		// The AJTypeSystem goes to great lengths to provide a uniform appearance between
+		// code-style and
+		// annotation-style aspects. Therefore there is no 'clean' way to tell them apart.
+		// Here we rely on
 		// an implementation detail of the AspectJ compiler.
 		for (Field field : clazz.getDeclaredFields()) {
 			if (field.getName().startsWith(AJC_MAGIC)) {
@@ -100,10 +102,11 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 	@Override
 	public void validate(Class<?> aspectClass) throws AopConfigException {
 		// If the parent has the annotation and isn't abstract it's an error
-		if (aspectClass.getSuperclass().getAnnotation(Aspect.class) != null &&
-				!Modifier.isAbstract(aspectClass.getSuperclass().getModifiers())) {
-			throw new AopConfigException("[" + aspectClass.getName() + "] cannot extend concrete aspect [" +
-					aspectClass.getSuperclass().getName() + "]");
+		if (aspectClass.getSuperclass().getAnnotation(Aspect.class) != null
+				&& !Modifier.isAbstract(aspectClass.getSuperclass().getModifiers())) {
+			throw new AopConfigException(
+					"[" + aspectClass.getName() + "] cannot extend concrete aspect ["
+							+ aspectClass.getSuperclass().getName() + "]");
 		}
 
 		AjType<?> ajType = AjTypeSystem.getAjType(aspectClass);
@@ -111,25 +114,30 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 			throw new NotAnAtAspectException(aspectClass);
 		}
 		if (ajType.getPerClause().getKind() == PerClauseKind.PERCFLOW) {
-			throw new AopConfigException(aspectClass.getName() + " uses percflow instantiation model: " +
-					"This is not supported in Spring AOP.");
+			throw new AopConfigException(
+					aspectClass.getName() + " uses percflow instantiation model: "
+							+ "This is not supported in Spring AOP.");
 		}
 		if (ajType.getPerClause().getKind() == PerClauseKind.PERCFLOWBELOW) {
-			throw new AopConfigException(aspectClass.getName() + " uses percflowbelow instantiation model: " +
-					"This is not supported in Spring AOP.");
+			throw new AopConfigException(
+					aspectClass.getName() + " uses percflowbelow instantiation model: "
+							+ "This is not supported in Spring AOP.");
 		}
 	}
 
 	/**
-	 * Find and return the first AspectJ annotation on the given method
-	 * (there <i>should</i> only be one anyway...)
+	 * 获取方法上的 AspectJ 注解，并且用 AspectJAnnotation 封装
+	 * <p>
+	 * Find and return the first AspectJ annotation on the given method (there
+	 * <i>should</i> only be one anyway...)
 	 */
 	@SuppressWarnings("unchecked")
 	protected static AspectJAnnotation<?> findAspectJAnnotationOnMethod(Method method) {
-		Class<?>[] classesToLookFor = new Class<?>[] {
-				Before.class, Around.class, After.class, AfterReturning.class, AfterThrowing.class, Pointcut.class};
+		Class<?>[] classesToLookFor = new Class<?>[] { Before.class, Around.class,
+			After.class, AfterReturning.class, AfterThrowing.class, Pointcut.class };
 		for (Class<?> c : classesToLookFor) {
-			AspectJAnnotation<?> foundAnnotation = findAnnotation(method, (Class<Annotation>) c);
+			AspectJAnnotation<?> foundAnnotation = findAnnotation(method,
+					(Class<Annotation>) c);
 			if (foundAnnotation != null) {
 				return foundAnnotation;
 			}
@@ -137,7 +145,8 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 		return null;
 	}
 
-	private static <A extends Annotation> AspectJAnnotation<A> findAnnotation(Method method, Class<A> toLookFor) {
+	private static <A extends Annotation> AspectJAnnotation<A> findAnnotation(
+			Method method, Class<A> toLookFor) {
 		A result = AnnotationUtils.findAnnotation(method, toLookFor);
 		if (result != null) {
 			return new AspectJAnnotation<A>(result);
@@ -147,36 +156,31 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 		}
 	}
 
-
 	protected enum AspectJAnnotationType {
 
-		AtPointcut,
-		AtBefore,
-		AtAfter,
-		AtAfterReturning,
-		AtAfterThrowing,
-		AtAround
+		AtPointcut, AtBefore, AtAfter, AtAfterReturning, AtAfterThrowing, AtAround
 	}
 
-
 	/**
-	 * Class modelling an AspectJ annotation, exposing its type enumeration and
-	 * pointcut String.
+	 * Class modelling an AspectJ annotation, exposing its type enumeration and pointcut
+	 * String.
 	 */
 	protected static class AspectJAnnotation<A extends Annotation> {
 
-		private static final String[] EXPRESSION_PROPERTIES = new String[] {"value", "pointcut"};
+		private static final String[] EXPRESSION_PROPERTIES = new String[] { "value",
+			"pointcut" };
 
-		private static Map<Class<?>, AspectJAnnotationType> annotationTypes =
-				new HashMap<Class<?>, AspectJAnnotationType>();
+		private static Map<Class<?>, AspectJAnnotationType> annotationTypes = new HashMap<Class<?>, AspectJAnnotationType>();
 
 		static {
-			annotationTypes.put(Pointcut.class,AspectJAnnotationType.AtPointcut);
-			annotationTypes.put(After.class,AspectJAnnotationType.AtAfter);
-			annotationTypes.put(AfterReturning.class,AspectJAnnotationType.AtAfterReturning);
-			annotationTypes.put(AfterThrowing.class,AspectJAnnotationType.AtAfterThrowing);
-			annotationTypes.put(Around.class,AspectJAnnotationType.AtAround);
-			annotationTypes.put(Before.class,AspectJAnnotationType.AtBefore);
+			annotationTypes.put(Pointcut.class, AspectJAnnotationType.AtPointcut);
+			annotationTypes.put(After.class, AspectJAnnotationType.AtAfter);
+			annotationTypes.put(AfterReturning.class,
+					AspectJAnnotationType.AtAfterReturning);
+			annotationTypes.put(AfterThrowing.class,
+					AspectJAnnotationType.AtAfterThrowing);
+			annotationTypes.put(Around.class, AspectJAnnotationType.AtAround);
+			annotationTypes.put(Before.class, AspectJAnnotationType.AtBefore);
 		}
 
 		private final A annotation;
@@ -194,10 +198,12 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 			// but need to invoke them reflectively as there isn't a common interface.
 			try {
 				this.pointcutExpression = resolveExpression(annotation);
-				this.argumentNames = (String) annotation.getClass().getMethod("argNames").invoke(annotation);
+				this.argumentNames = (String) annotation.getClass().getMethod(
+						"argNames").invoke(annotation);
 			}
 			catch (Exception ex) {
-				throw new IllegalArgumentException(annotation + " cannot be an AspectJ annotation", ex);
+				throw new IllegalArgumentException(
+						annotation + " cannot be an AspectJ annotation", ex);
 			}
 		}
 
@@ -207,7 +213,8 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 					return annotationTypes.get(type);
 				}
 			}
-			throw new IllegalStateException("Unknown annotation type: " + annotation.toString());
+			throw new IllegalStateException(
+					"Unknown annotation type: " + annotation.toString());
 		}
 
 		private String resolveExpression(A annotation) throws Exception {
@@ -252,12 +259,12 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 		}
 	}
 
-
 	/**
-	 * ParameterNameDiscoverer implementation that analyzes the arg names
-	 * specified at the AspectJ annotation level.
+	 * ParameterNameDiscoverer implementation that analyzes the arg names specified at the
+	 * AspectJ annotation level.
 	 */
-	private static class AspectJAnnotationParameterNameDiscoverer implements ParameterNameDiscoverer {
+	private static class AspectJAnnotationParameterNameDiscoverer
+			implements ParameterNameDiscoverer {
 
 		@Override
 		public String[] getParameterNames(Method method) {
@@ -268,7 +275,8 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 			if (annotation == null) {
 				return null;
 			}
-			StringTokenizer strTok = new StringTokenizer(annotation.getArgumentNames(), ",");
+			StringTokenizer strTok = new StringTokenizer(annotation.getArgumentNames(),
+					",");
 			if (strTok.countTokens() > 0) {
 				String[] names = new String[strTok.countTokens()];
 				for (int i = 0; i < names.length; i++) {
@@ -283,7 +291,8 @@ public abstract class AbstractAspectJAdvisorFactory implements AspectJAdvisorFac
 
 		@Override
 		public String[] getParameterNames(Constructor<?> ctor) {
-			throw new UnsupportedOperationException("Spring AOP cannot handle constructor advice");
+			throw new UnsupportedOperationException(
+					"Spring AOP cannot handle constructor advice");
 		}
 	}
 

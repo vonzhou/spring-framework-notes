@@ -377,7 +377,7 @@ public abstract class AbstractApplicationEventMulticaster
 					}
 				}
 			}
-			AnnotationAwareOrderComparator.sort(allListeners);
+			AnnotationAwareOrderComparator.sort(allListeners); // 排序
 			return allListeners;
 		}
 	}

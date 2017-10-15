@@ -305,13 +305,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Create a proxy with the configured interceptors if the bean is identified as one to
-	 * proxy by the subclass.
-=======
-	 * AOP就是在这里发挥作用的。 Create a proxy with the configured interceptors if the bean is
-	 * identified as one to proxy by the subclass.
->>>>>>> bb6f8f98c7b60a2c2be951da215094f719547008
+	 * <<<<<<< HEAD Create a proxy with the configured interceptors if the bean is
+	 * identified as one to proxy by the subclass. ======= AOP就是在这里发挥作用的。 Create a proxy
+	 * with the configured interceptors if the bean is identified as one to proxy by the
+	 * subclass. >>>>>>> bb6f8f98c7b60a2c2be951da215094f719547008
 	 * 
 	 * @see #getAdvicesAndAdvisorsForBean
 	 */
@@ -487,7 +484,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		}
 
 		ProxyFactory proxyFactory = new ProxyFactory();
-		proxyFactory.copyFrom(this);
+		proxyFactory.copyFrom(this); // 从当前对象中获取部分属性
 
 		if (!proxyFactory.isProxyTargetClass()) {
 			if (shouldProxyTargetClass(beanClass, beanName)) {
@@ -506,6 +503,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		proxyFactory.setTargetSource(targetSource);
 		customizeProxyFactory(proxyFactory);
 
+		// 默认为 false，即代理工厂被配置之后，不允许修改
 		proxyFactory.setFrozen(this.freezeProxy);
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
@@ -583,6 +581,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 					+ nrOfSpecificInterceptors + " specific interceptors");
 		}
 
+		// 把拦截器转化为 Advisor
 		Advisor[] advisors = new Advisor[allInterceptors.size()];
 		for (int i = 0; i < allInterceptors.size(); i++) {
 			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
