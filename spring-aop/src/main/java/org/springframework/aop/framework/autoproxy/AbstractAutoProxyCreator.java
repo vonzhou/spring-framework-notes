@@ -305,10 +305,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-	 * <<<<<<< HEAD Create a proxy with the configured interceptors if the bean is
-	 * identified as one to proxy by the subclass. ======= AOP就是在这里发挥作用的。 Create a proxy
-	 * with the configured interceptors if the bean is identified as one to proxy by the
-	 * subclass. >>>>>>> bb6f8f98c7b60a2c2be951da215094f719547008
+	 * AOP就是在这里发挥作用的。
+	 * <p>
+	 * Create a proxy with the configured interceptors if the bean is identified as one to
+	 * proxy by the subclass.
 	 * 
 	 * @see #getAdvicesAndAdvisorsForBean
 	 */
@@ -318,7 +318,6 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (!this.earlyProxyReferences.contains(cacheKey)) {
-				// 如果需要被代理，则要封装 bean
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -361,6 +360,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (beanName != null && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+
+		// 缓存结果，避免重复检测
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
@@ -370,8 +371,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// Create proxy if we have advice.
-		// 如果有 advice 才会创建代理
+		// 如果有增强器（advice） 才会创建代理
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(),
 				beanName, null); // 查找可以应用到该 bean 的 Advisor
 		if (specificInterceptors != DO_NOT_PROXY) {
